@@ -43,3 +43,7 @@ button {
 .label-prediction {
     margin-top: 6px;
 }
+
+.loader {
+    padding-top: 4px;
+}

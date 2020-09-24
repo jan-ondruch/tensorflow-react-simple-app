@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import update from 'immutability-helper';
 import * as tf from '@tensorflow/tfjs';
+import Loader from 'react-loader-spinner';
 
 import './TensorFlowExample.css';
 
@@ -20,6 +21,7 @@ const TensorFlowExample = () => {
         model: null,
         trained: false,
         predictedValue: 'Click on train!',
+        loading: false,
         valueToPredict: 1,
     });
 
@@ -55,7 +57,13 @@ const TensorFlowExample = () => {
     });
 
     const handleTrainModel = () => {
-        console.log('Training...');
+
+        // Change the loading state.
+        setModelState({
+            ...modelState,
+            loading: true
+        })
+
         let xValues = [],
             yValues = [];
 
@@ -73,13 +81,14 @@ const TensorFlowExample = () => {
         const xs = tf.tensor2d(xValues, [xValues.length, 1]);
         const ys = tf.tensor2d(yValues, [yValues.length, 1]);
 
-        // Train the model usnig the data.
+        // Train the model using the data.
         model.fit(xs, ys, { epochs: 250 }).then(() => {
             setModelState({
                 ...modelState,
                 model: model,
                 trained: true,
                 predictedValue: 'Ready for making predictions',
+                loading: false,
             });
         });
 
@@ -154,7 +163,18 @@ const TensorFlowExample = () => {
                     type="number"
                     placeholder="Enter an integer" /><br />
                 <div className="element label-prediction">
-                    {modelState.predictedValue}
+                    {
+                        /* conditional rendering */
+                        modelState.loading ? 
+                            <Loader
+                            type="Bars"
+                            color="#00DE00"
+                            height={32}
+                            width={32}
+                            />
+                        :    
+                            <h3>{modelState.predictedValue}</h3>
+                    }
                 </div>
                 <button
                     className="element button--green"
