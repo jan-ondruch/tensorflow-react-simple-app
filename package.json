@@ -1,7 +1,7 @@
 {
   "name": "tf-react-simple-app",
   "homepage": ".",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "private": true,
   "dependencies": {
     "@tensorflow/tfjs": "^2.4.0",
