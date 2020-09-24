@@ -55,6 +55,7 @@ const TensorFlowExample = () => {
     });
 
     const handleTrainModel = () => {
+        console.log('Training...');
         let xValues = [],
             yValues = [];
 
