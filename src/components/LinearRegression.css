@@ -1,9 +1,12 @@
-.tensorflow-example {
+.linear-regression {
     padding: 16px 32px 32px 32px;
 }
 
 .section {
     color: #131313;
+}
+h3.section {
+    margin-top: -16px;
 }
 
 .row {
@@ -45,5 +48,5 @@ button {
 }
 
 .loader {
-    padding-top: 4px;
+    padding-top: 12px;
 }

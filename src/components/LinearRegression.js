@@ -3,9 +3,9 @@ import update from 'immutability-helper';
 import * as tf from '@tensorflow/tfjs';
 import Loader from 'react-loader-spinner';
 
-import './TensorFlowExample.css';
+import './LinearRegression.css';
 
-const TensorFlowExample = () => {
+const LinearRegression = () => {
     // Value pairs state
     const [valuePairsState, setValuePairsState] = useState([
         { x: -1, y: -3 },
@@ -106,9 +106,10 @@ const TensorFlowExample = () => {
     }
 
     return (
-        <div className="tensorflow-example">
+        <div className="linear-regression">
             <div className="train-controls">
-                <h2 className="section">Training Data (x,y) pairs</h2>
+                <h2>Linear Regression</h2>
+                <h3 className="section">Training Data (x,y) pairs</h3>
                 <div className="row labels">
                     <div className="field-label column">X</div>
                     <div className="field-label column">Y</div>
@@ -167,6 +168,7 @@ const TensorFlowExample = () => {
                         /* conditional rendering */
                         modelState.loading ? 
                             <Loader
+                            className="loader"
                             type="Bars"
                             color="#00DE00"
                             height={32}
@@ -187,4 +189,4 @@ const TensorFlowExample = () => {
     )
 }
 
-export default TensorFlowExample;
+export default LinearRegression;

@@ -1,13 +1,17 @@
 import React from 'react';
 
-import TensorFlowExample from './components/TensorFlowExample';
+import LinearRegression from './components/LinearRegression';
+import MobileNet from './components/MobileNet';
 import './App.css';
+
 
 function App() {
   return (
     <div className="App">
       <Header />
-      <TensorFlowExample/>
+      <LinearRegression/>
+      <hr></hr>
+      <MobileNet />
     </div>
   );
 }
