@@ -12,9 +12,9 @@ import './MobileNet.css';
 
 const MobileNet = () => {
 
-    // Declare a new state variable called "loaded".
+    // Declare a new state variable called "clsResult".
     // Before 2018, we would need to write a constructor here and then change the
-    // state via "this.state.loaded".
+    // state via "this.state.clsResult".
     //
     // Now, we just use the new useState hook, that lets us add React state to
     // function components.
@@ -22,7 +22,7 @@ const MobileNet = () => {
     // Why the square brackets? Array destructing syntax.
     //
     // We just pass an initial state to this function at its definition.
-    // "loaded" is an argument, "setLoaded" is a function.
+    // "clsResult" is an argument, "setClsResult" is a function.
     const [clsResult, setClsResult] = useState([]);
 
     // You can think of the useEffect Hook as componentDidMount, 
@@ -55,19 +55,18 @@ const MobileNet = () => {
         }
         loadMobileNet();
 
-        // Classify the image
+        // Classify the image and save the results into the state
         async function classifyNet() {
             const imgEl = document.getElementById('mnimg');
-            const result = await net.classify(imgEl);
-            console.log(result);
-            setClsResult([result]);
+            const results = await net.classify(imgEl);
+            results.map(r => setClsResult(clsResult => [...clsResult, r]));
         }
     };
 
 
     return (
-        <div className="mobilenet">
-            <div className="">
+        <div className="mobile-net">
+            <div>
                 <h2>MobileNet</h2>
                 <img 
                     id='mnimg' 
@@ -77,10 +76,23 @@ const MobileNet = () => {
                 <div>
                     {
                         clsResult.length ?
-                            <p>{clsResult[0][0].className} | {clsResult[0][0].probability}</p>
-                            // clsResult[0].forEach(r => {
-                            //     return (<h3>r.className, r.probability</h3>)
-                            // })
+                            clsResult.map((val, index) => {
+                                return (
+                                    <div key={index} className="row">
+                                        <input
+                                            className="field field-x column"
+                                            value={val.className}
+                                            name="className"
+                                            data-index={index} />
+                                    
+                                        <input 
+                                            className="field field-y column"
+                                            value={val.probability}
+                                            name="probability"
+                                            data-index={index} />
+                                    </div>
+                                );
+                            })
                             :
                         <p>Classifying...</p>
                     }

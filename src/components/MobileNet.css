@@ -1,0 +1,26 @@
+.mobile-net {
+    padding: 16px 32px 32px 32px;
+}
+
+
+.row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: 2px;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.field {
+    margin-left: 2px;
+    margin-right: 2px;
+    padding: 2px;
+    padding-left: 6px;
+    border: 2px solid #131313;
+    min-width: 33vw;
+}

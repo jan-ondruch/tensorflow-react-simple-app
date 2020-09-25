@@ -123,7 +123,8 @@ const LinearRegression = () => {
                                 value={val.x}
                                 name="x"
                                 data-index={index}
-                                onChange={handleValuePairChange} />
+                                onChange={handleValuePairChange}
+                                type="number" />
                         
                             <input 
                                 className="field field-y column"
