@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
 * {
   font-family: 'Bebas Neue', cursive;
+  color: #131313;
 }
 
 .App {
@@ -17,7 +18,7 @@ h1 {
   letter-spacing: 1px;
 }
 
-p {
+.Header p {
   color: #f1f1f1;
   letter-spacing: 0.3px;
 }
