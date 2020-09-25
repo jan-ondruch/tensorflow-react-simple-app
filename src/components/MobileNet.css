@@ -2,7 +2,6 @@
     padding: 16px 32px 32px 32px;
 }
 
-
 .row {
     display: flex;
     flex-direction: row;
@@ -23,4 +22,16 @@
     padding-left: 6px;
     border: 2px solid #131313;
     min-width: 33vw;
+}
+
+button {
+    font-size: 1.2em;
+    padding: 6px 20px;
+    margin: 16px;
+}
+
+.button--green {
+    background-color: #131313;
+    color: #00DE00;
+    border: 0px;
 }
