@@ -1,8 +1,8 @@
-import React from 'react';
+import React from 'react'
 
-import LinearRegression from './components/LinearRegression';
-import MobileNet from './components/MobileNet';
-import './App.css';
+import LinearRegression from './components/LinearRegression'
+import MobileNet from './components/MobileNet'
+import './App.css'
 
 
 function App() {
@@ -13,10 +13,10 @@ function App() {
       <hr></hr>
       <MobileNet />
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
 
 
 const Header = () => (
@@ -31,4 +31,4 @@ const Header = () => (
         My personal contribution was an addition of some neat functionality as well as of my own styles.
       </p>
   </div>
-);
+)

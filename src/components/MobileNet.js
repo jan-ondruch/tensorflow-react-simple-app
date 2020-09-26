@@ -1,11 +1,11 @@
 /* eslint-disable jsx-a11y/img-redundant-alt */
-import React, { useState, useEffect } from 'react';
-import Loader from 'react-loader-spinner';
+import React, { useState, useEffect } from 'react'
+import Loader from 'react-loader-spinner'
 
-import * as mn from '@tensorflow-models/mobilenet';
-import * as tf from '@tensorflow/tfjs';
+import * as mn from '@tensorflow-models/mobilenet'
+import * as tf from '@tensorflow/tfjs'
 
-import './MobileNet.css';
+import './MobileNet.css'
 
 // Earlier, when we wanted to use hooks - include any state to it, 
 // we had to transform the function componenent into class.
@@ -33,8 +33,8 @@ const MobileNet = () => {
     //
     // We just pass an initial state to this function at its definition.
     // "clsImage" is an argument, "setClsImage" is a function.
-    const [clsImage, setClsImage] = useState([]);
-    const [clsVideo, setClsVideo] = useState([]);
+    const [clsImage, setClsImage] = useState([])
+    const [clsVideo, setClsVideo] = useState([])
     
     
     // You can think of the useEffect Hook as componentDidMount, 
@@ -50,17 +50,14 @@ const MobileNet = () => {
     // Alternatively, we can add there an argument, on which the Hook
     // will be called again.
     useEffect(() => {
-        setUpInterface();
-        let a = [1,2,3];
-        a = a.map(a => a*2);
-        console.log(a);
-    }, []);
+        setUpInterface()
+    }, [])
     
     // Component vars
     // Don't know any better know where to put them (use them as "attributes")
     // I don't think putting them into state would be a good idea...
-    let net;
-    let webcam;
+    let net
+    let webcam
 
     // Load the MobileNet model and call the loadWebCam function.
     const setUpInterface = () => {
@@ -73,56 +70,77 @@ const MobileNet = () => {
         // returns its result.
         // The code literally pauses at that line and does not continue further.
         async function loadMobileNet() {
-            net = await mn.load();
-            console.log("Successfully loaded model!");
+            net = await mn.load()
+            console.log("Successfully loaded model!")
 
-            loadWebCam();
+            loadWebCam()
         }
 
-        loadMobileNet();
-    };
+        loadMobileNet()
+    }
 
     // Load the web cam
     async function loadWebCam() {
-        const webcamElement = document.getElementById('webcam');    // const is block-scoped
-        webcam = await tf.data.webcam(webcamElement);
-        console.log("Webcam is loaded!");
+        const webcamElement = document.getElementById('webcam')    // const is block-scoped
+        webcam = await tf.data.webcam(webcamElement)
+        console.log("Webcam is loaded!")
 
-        videoClassification(true);
-        classifyImage();
+        videoClassification(true)
+        classifyImage()
     }
 
     // Classify the image and save the results into the state
     async function classifyImage() {
-        const imgEl = document.getElementById('mnimg');
-        const results = await net.classify(imgEl);
-        setClsImage(results);
+        const imgEl = document.getElementById('mnimg')
+        const results = await net.classify(imgEl)
+        setClsImage(results)
     }
 
     // Video classification.
     async function videoClassification() {
         while(true) {
-            const img = await webcam.capture();
-            const result = await net.classify(img);
+            const img = await webcam.capture()
+            const result = await net.classify(img)
 
             // Just save the last classification.
-            setClsVideo(result);    
-
+            // setClsVideo(result)    
+            
             // Save all classifications.
-            // result.map(r => setClsVideo(clsVideo => [...clsVideo, r]));
-            // console.log(result[0].className, result[0].probability);
+            result.map(r => setClsVideo(clsVideo => [...clsVideo, r]))
+
+            // Calculate video classes
+            calculateVideoClasses()
 
             // Dispose the tensor to release the memory.
-            img.dispose();
+            img.dispose()
 
             // Give some breathing room by waiting for the next 
             // animation frame to fire.
-            await sleep(3000);
-            await tf.nextFrame();
+            await sleep(3000)
+            await tf.nextFrame()
         }
-    };
+    }
 
-    const sleep = ms => new Promise(res => setTimeout(res, ms));
+    const sleep = ms => new Promise(res => setTimeout(res, ms))
+
+    // Calculate representation of various classes fetched from the video. 
+    const calculateVideoClasses = () => {
+
+        // 2. After each addition, calculate the representations.
+        // Think we need a reducer.
+        // Group by className, save the count, calculate average probability
+        // className, count, avgProbability
+        // 3. Display them in a table to the user.
+
+        // Reducer - because we need to transform an array in a more complex way.
+        // Group by className, save the count, calculate the avg probability.
+
+        // let reducedData = clsVideo.reduce((acc, cur, idx) => {
+        //     console.log("Inside of reducer")
+        //     acc.className = cur.className
+        //     return acc
+        // }, []) // initial value in the accumulator
+    }
 
 
     return (
@@ -135,8 +153,8 @@ const MobileNet = () => {
                     <div>
                         {
                             clsVideo.length ?
-                            <p>{clsVideo[clsVideo.length-1].className}</p>
-                                :
+                            <p>{clsVideo[clsVideo.length-1].className}</p>  // JSX element
+                                :                                           // must be compiled
                             <div className="wait-for-video">
                                 <Loader
                                 className="loader"
@@ -178,7 +196,7 @@ const MobileNet = () => {
                                                 {val.probability}
                                             </span>
                                         </div>
-                                    );
+                                    )
                                 })
                                 :
                             <p>Classifying...</p>
@@ -187,7 +205,7 @@ const MobileNet = () => {
                 </div>
             </div>
         </div>
-    );
-};
+    )
+}
 
-export default MobileNet;
+export default MobileNet

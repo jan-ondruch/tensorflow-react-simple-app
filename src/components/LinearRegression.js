@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import update from 'immutability-helper';
-import * as tf from '@tensorflow/tfjs';
-import Loader from 'react-loader-spinner';
+import React, { useState } from 'react'
+import update from 'immutability-helper'
+import * as tf from '@tensorflow/tfjs'
+import Loader from 'react-loader-spinner'
 
-import './LinearRegression.css';
+import './LinearRegression.css'
 
 const LinearRegression = () => {
     // Value pairs state
@@ -14,7 +14,7 @@ const LinearRegression = () => {
         { x: 2, y: 3},
         { x: 3, y: 5},
         { x: 4, y: 7},
-    ]);
+    ])
 
     // Define the model state
     const [modelState, setModelState] = useState({
@@ -23,7 +23,7 @@ const LinearRegression = () => {
         predictedValue: 'Click on train!',
         loading: false,
         valueToPredict: 1,
-    });
+    })
 
     // Event handlers
     const handleValuePairChange = (e) => {
@@ -36,25 +36,25 @@ const LinearRegression = () => {
         setValuePairsState(
             updatedValuePairs
         )
-    };
+    }
 
     const handleAddItem = () => {
         setValuePairsState([
             ...valuePairsState,
             { x: 1, y: 1 }
-        ]);
+        ])
     }
 
     const handleDeleteItem = () => {
         setValuePairsState([
             ...valuePairsState.slice(0,valuePairsState.length-1)
-        ]);
+        ])
     }
 
     const handleModelChange = (e) => setModelState({
         ...modelState,
         [e.target.name]: [parseInt(e.target.value)],
-    });
+    })
 
     const handleTrainModel = () => {
 
@@ -65,21 +65,21 @@ const LinearRegression = () => {
         })
 
         let xValues = [],
-            yValues = [];
+            yValues = []
 
         valuePairsState.forEach((val, index) => {
-            xValues.push(val.x);
-            yValues.push(val.y);
-        });
+            xValues.push(val.x)
+            yValues.push(val.y)
+        })
 
         // Define a model for linear regression.
-        const model = tf.sequential();
-        model.add(tf.layers.dense({ units: 1, inputShape: [1]}));
+        const model = tf.sequential()
+        model.add(tf.layers.dense({ units: 1, inputShape: [1]}))
 
         // Prepare the model for training: Specify the loss and the optimizer.
-        model.compile({ loss: 'meanSquaredError', optimizer: 'sgd' });
-        const xs = tf.tensor2d(xValues, [xValues.length, 1]);
-        const ys = tf.tensor2d(yValues, [yValues.length, 1]);
+        model.compile({ loss: 'meanSquaredError', optimizer: 'sgd' })
+        const xs = tf.tensor2d(xValues, [xValues.length, 1])
+        const ys = tf.tensor2d(yValues, [yValues.length, 1])
 
         // Train the model using the data.
         model.fit(xs, ys, { epochs: 250 }).then(() => {
@@ -89,20 +89,20 @@ const LinearRegression = () => {
                 trained: true,
                 predictedValue: 'Ready for making predictions',
                 loading: false,
-            });
-        });
+            })
+        })
 
     }
 
     const handlePredict = () => {
         // Use the model to do inference on a data point the model has not seen before:
         const predictedValue = modelState.model.predict(tf.tensor2d([modelState.valueToPredict], [1, 1]))
-            .arraySync()[0][0];
+            .arraySync()[0][0]
 
         setModelState({
             ...modelState,
             predictedValue: predictedValue,
-        });
+        })
     }
 
     return (
@@ -134,7 +134,7 @@ const LinearRegression = () => {
                                 onChange={handleValuePairChange}
                                 type="number" />
                         </div>
-                    );
+                    )
                 })}
             
                 <button
@@ -190,4 +190,4 @@ const LinearRegression = () => {
     )
 }
 
-export default LinearRegression;
+export default LinearRegression
