@@ -1,5 +1,7 @@
 /* eslint-disable jsx-a11y/img-redundant-alt */
 import React, { useState, useEffect } from 'react';
+import Loader from 'react-loader-spinner';
+
 import * as mn from '@tensorflow-models/mobilenet';
 import * as tf from '@tensorflow/tfjs';
 
@@ -10,6 +12,7 @@ import './MobileNet.css';
 // This is no longer necessary (since 16.8.0).
 // React Native supports them, as well (since 0.59).
 // You can still use the old solution, it is 100% bw compatible.
+// We can use these new hooks in functional components.
 
 // Functional Component or Stateless Component
 // (opposed to a Class Component or Stateful Component)
@@ -48,6 +51,9 @@ const MobileNet = () => {
     // will be called again.
     useEffect(() => {
         setUpInterface();
+        let a = [1,2,3];
+        a = a.map(a => a*2);
+        console.log(a);
     }, []);
     
     // Component vars
@@ -58,11 +64,14 @@ const MobileNet = () => {
 
     // Load the MobileNet model and call the loadWebCam function.
     const setUpInterface = () => {
-        
-        console.log("Loading mobilenet...");
-
         // Create an scoped async function in the Hook
         // Load the net
+        // Async/await is a syntax sugar above promises, making them easier to use.
+        // The word "async" in front of the function name means the function will always
+        // return a promise. Even non-promises are wrapped and returned as promises.
+        // The keyword "await" means that JS waits until the promise resolves and then 
+        // returns its result.
+        // The code literally pauses at that line and does not continue further.
         async function loadMobileNet() {
             net = await mn.load();
             console.log("Successfully loaded model!");
@@ -96,7 +105,10 @@ const MobileNet = () => {
             const img = await webcam.capture();
             const result = await net.classify(img);
 
-            setClsVideo(result);
+            // Just save the last classification.
+            setClsVideo(result);    
+
+            // Save all classifications.
             // result.map(r => setClsVideo(clsVideo => [...clsVideo, r]));
             // console.log(result[0].className, result[0].probability);
 
@@ -105,9 +117,12 @@ const MobileNet = () => {
 
             // Give some breathing room by waiting for the next 
             // animation frame to fire.
+            await sleep(3000);
             await tf.nextFrame();
         }
     };
+
+    const sleep = ms => new Promise(res => setTimeout(res, ms));
 
 
     return (
@@ -122,7 +137,16 @@ const MobileNet = () => {
                             clsVideo.length ?
                             <p>{clsVideo[clsVideo.length-1].className}</p>
                                 :
-                            <p>Classifying...</p>
+                            <div className="wait-for-video">
+                                <Loader
+                                className="loader"
+                                type="Grid"
+                                color="#00DE00"
+                                height={156}
+                                width={156}
+                                />
+                                <p>Loading...</p>
+                            </div>
                         }
                     </div>
                 </div>

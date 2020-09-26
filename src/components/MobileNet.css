@@ -35,3 +35,7 @@ button {
     color: #00DE00;
     border: 0px;
 }
+
+.wait-for-video {
+    margin-top: -232px !important;
+}
