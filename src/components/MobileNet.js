@@ -35,7 +35,7 @@ const MobileNet = () => {
     // "clsImage" is an argument, "setClsImage" is a function.
     const [clsImage, setClsImage] = useState([])
     const [clsVideo, setClsVideo] = useState([])
-    
+
     
     // You can think of the useEffect Hook as componentDidMount, 
     // componentDidUpdate, and componentWillUnmount combined.
@@ -103,7 +103,7 @@ const MobileNet = () => {
             const result = await net.classify(img)
 
             // Just save the last classification.
-            // setClsVideo(result)    
+            // setClsVideo(result)
             
             // Save all classifications.
             result.map(r => setClsVideo(clsVideo => [...clsVideo, r]))
@@ -153,8 +153,13 @@ const MobileNet = () => {
                     <div>
                         {
                             clsVideo.length ?
-                            <p>{clsVideo[clsVideo.length-1].className}</p>  // JSX element
-                                :                                           // must be compiled
+                            <div>
+                                <p>{clsVideo[clsVideo.length-1].className}</p>
+                                <p className="probability">
+                                    p: {clsVideo[clsVideo.length-1].probability.toFixed(2)}
+                                </p>
+                            </div>
+                                :
                             <div className="wait-for-video">
                                 <Loader
                                 className="loader"
@@ -193,7 +198,7 @@ const MobileNet = () => {
                                                 value={val.probability}
                                                 name="probability"
                                                 data-index={index}>
-                                                {val.probability}
+                                                {val.probability.toFixed(2)}
                                             </span>
                                         </div>
                                     )

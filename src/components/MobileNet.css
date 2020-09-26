@@ -39,3 +39,7 @@ button {
 .wait-for-video {
     margin-top: -232px !important;
 }
+
+.probability {
+    margin-top: -16px;
+}
