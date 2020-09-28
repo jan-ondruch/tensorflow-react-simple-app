@@ -5,6 +5,8 @@ import Loader from 'react-loader-spinner'
 
 import './LinearRegression.css'
 
+import { Box, Button, Typography, Input, Icon } from '@material-ui/core'
+
 const LinearRegression = () => {
     // Value pairs state
     const [valuePairsState, setValuePairsState] = useState([
@@ -106,19 +108,27 @@ const LinearRegression = () => {
     }
 
     return (
-        <div className="linear-regression">
-            <div className="train-controls">
-                <h2>Linear Regression</h2>
-                <h3 className="section">Training Data (x,y) pairs</h3>
-                <div className="row labels">
-                    <div className="field-label column">X</div>
-                    <div className="field-label column">Y</div>
-                </div>
+        <Box className="linear-regression">
+            <Box className="train-controls">
+                <Typography variant="h2">Linear Regression</Typography>
+                <Typography variant="subtitle1" className="section">Training Data (x,y) pairs</Typography>
+                <Box className="row labels">
+                    <Box className="field-label column">
+                        <Typography variant="h6">
+                            X
+                        </Typography>
+                    </Box>
+                    <Box className="field-label column">
+                        <Typography variant="h6">
+                            Y
+                        </Typography>
+                    </Box>
+                </Box>
 
                 {valuePairsState.map((val, index) => {
                     return (
-                        <div key={index} className="row">
-                            <input
+                        <Box key={index} className="row">
+                            <Input
                                 className="field field-x column"
                                 value={val.x}
                                 name="x"
@@ -126,45 +136,56 @@ const LinearRegression = () => {
                                 onChange={handleValuePairChange}
                                 type="number" />
                         
-                            <input 
+                            <Input
                                 className="field field-y column"
                                 value={val.y}
                                 name="y"
                                 data-index={index}
                                 onChange={handleValuePairChange}
                                 type="number" />
-                        </div>
+                        </Box>
                     )
                 })}
             
-                <button
-                    className="button-add-example button--green"
-                    onClick={handleAddItem}>
-                    Add a new pair
-                </button>
-                <button
-                    className="button-delete-example button--green"
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleAddItem}
+                    startIcon={<Icon>add</Icon>} >
+                        <Typography variant="button">
+                            Add a new pair
+                        </Typography>
+                </Button>
+                <Button
+                    variant="contained"
+                    color="primary"
                     onClick={handleDeleteItem}
-                    >
-                    Delete last pair
-                </button>
-                <button
-                    className="button-train button--green"
-                    onClick={handleTrainModel}>
-                Train
-                </button>
-            </div>
+                    startIcon={<Icon>delete</Icon>} >
+                        <Typography variant="button">
+                            Delete last pair
+                        </Typography>
+                </Button>
+                <Button
+                    variant="contained" 
+                    color="primary"
+                    onClick={handleTrainModel}
+                    startIcon={<Icon>scatter_plot</Icon>} >
+                    <Typography variant="button">
+                        Train
+                    </Typography>
+                </Button>
+            </Box>
 
-            <div className="predict-controls">
-                <h2 className="section">Predicting</h2>
-                <input
+            <Box className="predict-controls">
+                <Typography variant="h2">Predicting</Typography>
+                <Input
                     className="field element"
                     value={modelState.valueToPredict}
                     name="valueToPredict"
                     onChange={handleModelChange}
                     type="number"
                     placeholder="Enter an integer" /><br />
-                <div className="element label-prediction">
+                <Box className="element label-prediction">
                     {
                         /* conditional rendering */
                         modelState.loading ? 
@@ -176,17 +197,22 @@ const LinearRegression = () => {
                             width={32}
                             />
                         :    
-                            <h3>{modelState.predictedValue}</h3>
+                            <Typography variant="h5">
+                                {modelState.predictedValue}
+                            </Typography>
                     }
-                </div>
-                <button
-                    className="element button--green"
+                </Box>
+                <Button
+                    variant="contained"
+                    color="secondary"
                     onClick={handlePredict}
                     disabled={!modelState.trained}>
-                    Predict
-                </button>
-            </div>
-        </div>
+                    <Typography variant="button">
+                        Predict
+                    </Typography>
+                </Button>
+            </Box>
+        </Box>
     )
 }
 

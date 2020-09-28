@@ -5,6 +5,8 @@ import Loader from 'react-loader-spinner'
 import * as mn from '@tensorflow-models/mobilenet'
 import * as tf from '@tensorflow/tfjs'
 
+import { Box, Typography, } from '@material-ui/core'
+
 import './MobileNet.css'
 
 // Earlier, when we wanted to use hooks - include any state to it, 
@@ -108,9 +110,6 @@ const MobileNet = () => {
             // Save all classifications.
             result.map(r => setClsVideo(clsVideo => [...clsVideo, r]))
 
-            // Calculate video classes
-            calculateVideoClasses()
-
             // Dispose the tensor to release the memory.
             img.dispose()
 
@@ -123,44 +122,24 @@ const MobileNet = () => {
 
     const sleep = ms => new Promise(res => setTimeout(res, ms))
 
-    // Calculate representation of various classes fetched from the video. 
-    const calculateVideoClasses = () => {
-
-        // 2. After each addition, calculate the representations.
-        // Think we need a reducer.
-        // Group by className, save the count, calculate average probability
-        // className, count, avgProbability
-        // 3. Display them in a table to the user.
-
-        // Reducer - because we need to transform an array in a more complex way.
-        // Group by className, save the count, calculate the avg probability.
-
-        // let reducedData = clsVideo.reduce((acc, cur, idx) => {
-        //     console.log("Inside of reducer")
-        //     acc.className = cur.className
-        //     return acc
-        // }, []) // initial value in the accumulator
-    }
-
-
     return (
-        <div className="mobile-net">
-            <div>
-                <h2>MobileNet</h2>
-                <div className="video-classification">
-                    <h3>Video image classification</h3>
+        <Box className="mobile-net">
+            <Box>
+                <Typography variant="h2">MobileNet</Typography>
+                <Box className="video-classification">
+                    <Typography variant="h3">Video image classification</Typography>
                     <video autoPlay playsInline muted id="webcam" width="224" height="224"></video>
-                    <div>
+                    <Box>
                         {
                             clsVideo.length ?
-                            <div>
-                                <p>{clsVideo[clsVideo.length-1].className}</p>
-                                <p className="probability">
+                            <Box>
+                                <Typography variant="body1">{clsVideo[clsVideo.length-1].className}</Typography>
+                                <Typography variant="body2">
                                     p: {clsVideo[clsVideo.length-1].probability.toFixed(2)}
-                                </p>
-                            </div>
+                                </Typography>
+                            </Box>
                                 :
-                            <div className="wait-for-video">
+                            <Box className="wait-for-video">
                                 <Loader
                                 className="loader"
                                 type="Grid"
@@ -168,48 +147,54 @@ const MobileNet = () => {
                                 height={156}
                                 width={156}
                                 />
-                                <p>Loading...</p>
-                            </div>
+                                <Typography variant="body1">Loading...</Typography>
+                            </Box>
                         }
-                    </div>
-                </div>
-                <div className="image-classification">
-                    <h3>Image classification</h3>
+                    </Box>
+                </Box>
+                <Box className="image-classification">
+                    <Typography variant="h3">Image classification</Typography>
                     <img 
                         id='mnimg' 
                         src={process.env.PUBLIC_URL + '/images/MobileNetImage.jpg'} 
                         alt="MobileNet image" />
-                    <h4>Classification result</h4>
-                    <div>
+                    <Box>
+                    <Typography variant="h4">Classification results</Typography>
                         {
                             clsImage.length ?
                                 clsImage.map((val, index) => {
                                     return (
-                                        <div key={index} className="row">
-                                            <span
+                                        <Box key={index} className="row">
+                                            <Box
                                                 className="field field-x column"
                                                 name="className"
                                                 data-index={index}>
                                                 {val.className}
-                                            </span>
+                                            </Box>
                                         
-                                            <span 
+                                            <Box 
                                                 className="field field-y column"
                                                 value={val.probability}
                                                 name="probability"
                                                 data-index={index}>
                                                 {val.probability.toFixed(2)}
-                                            </span>
-                                        </div>
+                                            </Box>
+                                        </Box>
                                     )
                                 })
                                 :
-                            <p>Classifying...</p>
+                            <Loader
+                            className="loader"
+                            type="ThreeDots"
+                            color="#00DE00"
+                            height={32}
+                            width={32}
+                            />
                         }
-                    </div>
-                </div>
-            </div>
-        </div>
+                    </Box>
+                </Box>
+            </Box>
+        </Box>
     )
 }
 

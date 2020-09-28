@@ -2,47 +2,6 @@
     padding: 16px 32px 32px 32px;
 }
 
-.section {
-    color: #131313;
-}
-h3.section {
-    margin-top: -16px;
-}
-
-.row {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    padding: 2px;
-}
-  
-.column {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-}
-
-.field {
-    margin-left: 2px;
-    margin-right: 2px;
-    padding: 2px;
-    padding-left: 6px;
-    border: 2px solid #131313;
-    min-width: 33vw;
-}
-
-button {
-    font-size: 1.2em;
-    padding: 6px 20px;
-    margin: 16px;
-}
-
-.button--green {
-    background-color: #131313;
-    color: #00DE00;
-    border: 0px;
-}
-
 .label-prediction {
     margin-top: 6px;
 }
