@@ -2,19 +2,6 @@
     padding: 16px 32px 32px 32px;
 }
 
-.row {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    padding: 2px;
-}
-
-.column {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-}
-
 .wait-for-video {
     margin-top: -232px !important;
 }

@@ -5,7 +5,7 @@ import Loader from 'react-loader-spinner'
 import * as mn from '@tensorflow-models/mobilenet'
 import * as tf from '@tensorflow/tfjs'
 
-import { Box, Typography, } from '@material-ui/core'
+import { Box, Typography, Card, CardContent, Button, Icon } from '@material-ui/core'
 
 import './MobileNet.css'
 
@@ -162,26 +162,27 @@ const MobileNet = () => {
                     <Typography variant="h4">Classification results</Typography>
                         {
                             clsImage.length ?
-                                clsImage.map((val, index) => {
-                                    return (
-                                        <Box key={index} className="row">
-                                            <Box
-                                                className="field field-x column"
-                                                name="className"
-                                                data-index={index}>
-                                                {val.className}
-                                            </Box>
-                                        
-                                            <Box 
-                                                className="field field-y column"
-                                                value={val.probability}
-                                                name="probability"
-                                                data-index={index}>
-                                                {val.probability.toFixed(2)}
-                                            </Box>
-                                        </Box>
-                                    )
-                                })
+                                // clsImage.map((val, index) => {
+                                //     return (
+                                //         <Box key={index} className="row">
+                                //             <Box
+                                //                 className="field field-x column"
+                                //                 name="className"
+                                //                 data-index={index}>
+                                //                 {val.className}
+                                //             </Box>
+                                //             <ResultCard />
+                                //             <Box 
+                                //                 className="field field-y column"
+                                //                 value={val.probability}
+                                //                 name="probability"
+                                //                 data-index={index}>
+                                //                 {val.probability.toFixed(2)}
+                                //             </Box>
+                                //         </Box>
+                                //     )
+                                // })
+                                clsImage.map((val, index) => <ResultCard key={index} val={val.className} probability={val.probability} />)
                                 :
                             <Loader
                             className="loader"
@@ -199,3 +200,45 @@ const MobileNet = () => {
 }
 
 export default MobileNet
+
+
+const ResultCard = ({val, probability, index}) => {
+
+    const [showProbability, setShowProbability] = useState(false)
+
+    const handleChangeButtonText = () => ( 
+        showProbability ? 
+            setShowProbability(false)
+            :
+            setShowProbability(true)
+    )
+
+    React.useEffect(() => {
+        console.log('show probability changed!')
+    }, [showProbability])
+
+    return (
+        <Card index={index}>
+            <CardContent>
+                <Typography variant="h5">
+                    {val}
+                </Typography>
+                <Button
+                     variant="contained" 
+                     color="primary"
+                     onClick={handleChangeButtonText}
+                >
+                    <Typography variant="button">
+                        Toggle probability
+                    </Typography>
+                </Button>
+                {
+                    showProbability &&
+                    <Typography variant="subtitle1">
+                        {probability}
+                    </Typography>
+                }
+            </CardContent>      
+        </Card>
+    )
+}
