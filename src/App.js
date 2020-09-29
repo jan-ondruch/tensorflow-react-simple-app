@@ -2,38 +2,34 @@ import React from 'react'
 
 import LinearRegression from './components/LinearRegression'
 import MobileNet from './components/MobileNet'
+import Header from './components/Header'
+import Navbar from './components/Navbar'
+import About from './components/About'
 
-import { Divider, Box, Typography, Link, } from '@material-ui/core'
+import { Divider, Box } from '@material-ui/core'
+import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom"
 
 import './App.css'
 
 
 const App = () => (
   <Box className="App">
-      <Header />
-      <LinearRegression/>
-      <Divider />
-      <MobileNet />
+      <Router>
+        <Navbar />
+        <Header />
+        <Switch>
+            <Route path="/about">
+                <About />
+            </Route>
+            <Route path="/linear-regression">
+              <LinearRegression/>
+            </Route>
+            <Route path="/">
+              <MobileNet />
+            </Route>
+        </Switch>
+      </Router>
   </Box>
 )
 
 export default App
-
-
-const Header = () => (
-  <Box className="Header">
-      <Typography variant="h1">
-        TensorFlow React JS App
-      </Typography>
-      <Typography variant="subtitle1" color="secondary">
-        This project was based on 
-          <Link 
-            href="https://www.dlighthouse.co/2020/02/creating-tensorflowjs-reactjs-js-app.html"
-            color="primary"> this tutorial
-          </Link>
-      </Typography>
-      <Typography variant="subtitle1" color="secondary">
-        My personal contribution was an addition of some neat functionality as well as of my own styles.
-      </Typography>
-  </Box>
-)

@@ -5,7 +5,7 @@ import Loader from 'react-loader-spinner'
 import * as mn from '@tensorflow-models/mobilenet'
 import * as tf from '@tensorflow/tfjs'
 
-import { Box, Typography, Card, CardContent, Button, Icon } from '@material-ui/core'
+import { Box, Typography, Card, CardContent, Button, } from '@material-ui/core'
 
 import './MobileNet.css'
 
@@ -215,6 +215,7 @@ const ResultCard = ({val, probability, index}) => {
 
     React.useEffect(() => {
         console.log('show probability changed!')
+        return () => console.log('unmounted!')
     }, [showProbability])
 
     return (
