@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/img-redundant-alt */
 import React, { useState, useEffect } from 'react'
 import Loader from 'react-loader-spinner'
+import PropTypes from 'prop-types'
 
 import * as mn from '@tensorflow-models/mobilenet'
 import * as tf from '@tensorflow/tfjs'
@@ -242,4 +243,10 @@ const ResultCard = ({val, probability, index}) => {
             </CardContent>      
         </Card>
     )
+}
+
+ResultCard.propTypes = {
+    val: PropTypes.string,
+    probability: PropTypes.number,
+    index: PropTypes.number
 }

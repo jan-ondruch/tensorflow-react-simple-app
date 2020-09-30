@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 
 import { AppBar, Toolbar, Typography, IconButton, 
@@ -11,6 +11,9 @@ import ImageIcon from '@material-ui/icons/Image'
 import FunctionsIcon from '@material-ui/icons/Functions'
 import InfoIcon from '@material-ui/icons/Info'
 
+// makeStyles is a hook generator.
+// Enables us to override styles.
+// This is particularly useful when styling nested elements in a component.
 const useStyles = makeStyles((theme) => ({
     root: {
       flexGrow: 1,
@@ -71,9 +74,11 @@ const StyledMenu = withStyles({
     />
 ))
 
+// withStyles, the wrapped component accepts a classes prop,
+// it simply merges the class names provided with the style sheet.
 const StyledMenuItem = withStyles((theme) => ({
     root: {
-      '&:focus': {
+      '&:focus': {  // onFocus selector
         backgroundColor: theme.palette.primary.main,
         '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
           color: theme.palette.common.white
@@ -83,15 +88,16 @@ const StyledMenuItem = withStyles((theme) => ({
 }))(MenuItem)
 
 
-
+// Use functional components over class components whenever possible.
+// They are simpler to read, shorter, easier to test...
 const Navbar = () => {
-    const [anchorEl, setAnchorEl] = React.useState(null)
+    const [anchorEl, setAnchorEl] = useState(null)
 
-    const classes = useStyles()
+    const classes = useStyles() // using the Hook API
     const desktopNavbar = useMediaQuery('(min-width:668px)')
 
+    // event handlers
     const handleClick = (event) => setAnchorEl(event.currentTarget)
-
     const handleClose = () => setAnchorEl(null)
 
     return (
