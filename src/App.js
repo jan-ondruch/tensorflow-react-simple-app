@@ -6,7 +6,7 @@ import Header from './components/Header'
 import Navbar from './components/Navbar'
 import About from './components/About'
 
-import { Box, Typography } from '@material-ui/core'
+import { Box } from '@material-ui/core'
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom"
 
 
@@ -23,8 +23,9 @@ const App = () => (
               <LinearRegression/>
             </Route>
             <Route path="/">
-              <Typography variant="h2">MobileNet</Typography>
-              {/* <MobileNet /> */}
+              <MobileNet>
+                <p>Children of the net!</p>
+              </MobileNet>
             </Route>
         </Switch>
       </Router>

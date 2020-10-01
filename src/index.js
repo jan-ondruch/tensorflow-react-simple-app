@@ -10,11 +10,11 @@ import { CssBaseline } from '@material-ui/core'  // similar to normalize.css
 // additional checks and warnings for its descendants.
 
 ReactDOM.render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <CssBaseline>
       <App />
-    </CssBaseline>
-  </React.StrictMode>,
+    </CssBaseline>,
+  // </React.StrictMode>
   document.getElementById('root')
 )
 

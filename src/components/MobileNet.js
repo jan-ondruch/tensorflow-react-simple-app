@@ -54,6 +54,7 @@ const MobileNet = () => {
     // will be called again.
     useEffect(() => {
         setUpInterface()
+        return () => console.log('unmounted!')
     }, [])
     
     // Component vars
@@ -216,7 +217,6 @@ const ResultCard = ({val, probability, index}) => {
 
     React.useEffect(() => {
         console.log('show probability changed!')
-        return () => console.log('unmounted!')
     }, [showProbability])
 
     return (

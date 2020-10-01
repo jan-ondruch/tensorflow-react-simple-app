@@ -92,16 +92,24 @@ const StyledMenuItem = withStyles((theme) => ({
 // They are simpler to read, shorter, easier to test...
 const Navbar = () => {
     const [anchorEl, setAnchorEl] = useState(null)
+    const [isOpen, setIsOpen] = useState(false)
 
     const classes = useStyles() // using the Hook API
     const desktopNavbar = useMediaQuery('(min-width:668px)')
 
     // event handlers
-    const handleClick = (event) => setAnchorEl(event.currentTarget)
-    const handleClose = () => setAnchorEl(null)
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget)
+        setIsOpen(true)
+    }
+    const handleClose = () => {
+        setAnchorEl(null)
+        setIsOpen(false)
+    }
 
     return (
         desktopNavbar ?
+            // desktop appbar
             <div className={classes.root}>
                 <AppBar color="primary" title="TensorFlow React JS App" position="static">
                     <Toolbar>
@@ -123,6 +131,7 @@ const Navbar = () => {
                 </AppBar>
             </div>
             :
+            // mobile appbar
             <div className={classes.root}>
                 <AppBar position="static">
                     <Toolbar>
@@ -136,7 +145,7 @@ const Navbar = () => {
                             id="customized-menu"
                             anchorEl={anchorEl}
                             keepMounted
-                            open={Boolean(anchorEl)}
+                            open={isOpen}
                             onClose={handleClose}
                         >
                             <Link to="/" onClick={handleClose} className={classes.mobileItemLink}>

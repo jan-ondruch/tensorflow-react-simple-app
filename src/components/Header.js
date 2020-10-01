@@ -3,7 +3,7 @@ import { Box, Typography, Link } from '@material-ui/core'
 
 const Header = () => (
     <Box className="Header">
-        <Typography variant="h1" color="text.primary">
+        <Typography variant="h1" color="primary">
           TensorFlow React JS App
         </Typography>
         <Typography variant="subtitle1" color="secondary">
