@@ -17,7 +17,6 @@ import InfoIcon from '@material-ui/icons/Info'
 const useStyles = makeStyles((theme) => ({
     root: {
       flexGrow: 1,
-
     },
     logo: {
         color: '#fff',
@@ -98,7 +97,7 @@ const Navbar = () => {
     const desktopNavbar = useMediaQuery('(min-width:668px)')
 
     // event handlers
-    const handleClick = (event) => {
+    const handleClick = event => {
         setAnchorEl(event.currentTarget)
         setIsOpen(true)
     }

@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import update from 'immutability-helper'
 import * as tf from '@tensorflow/tfjs'
 import Loader from 'react-loader-spinner'
+import Header from './Header'
 
 import './LinearRegression.css'
 
@@ -108,111 +109,114 @@ const LinearRegression = () => {
     }
 
     return (
-        <Box className="linear-regression">
-            <Box className="train-controls">
-                <Typography variant="h2">Linear Regression</Typography>
-                <Typography variant="subtitle1" className="section">Training Data (x,y) pairs</Typography>
-                <Box className="row labels">
-                    <Box className="field-label column">
-                        <Typography variant="h6">
-                            X
-                        </Typography>
-                    </Box>
-                    <Box className="field-label column">
-                        <Typography variant="h6">
-                            Y
-                        </Typography>
-                    </Box>
-                </Box>
-
-                {valuePairsState.map((val, index) => {
-                    return (
-                        <Box key={index} className="row">
-                            <Input
-                                className="field field-x column"
-                                value={val.x}
-                                name="x"
-                                data-index={index}
-                                onChange={handleValuePairChange}
-                                type="number" />
-                        
-                            <Input
-                                className="field field-y column"
-                                value={val.y}
-                                name="y"
-                                data-index={index}
-                                onChange={handleValuePairChange}
-                                type="number" />
-                        </Box>
-                    )
-                })}
-            
-                <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleAddItem}
-                    startIcon={<Icon>add</Icon>} >
-                        <Typography variant="button">
-                            Add a new pair
-                        </Typography>
-                </Button>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleDeleteItem}
-                    startIcon={<Icon>delete</Icon>} >
-                        <Typography variant="button">
-                            Delete last pair
-                        </Typography>
-                </Button>
-                <Button
-                    variant="contained" 
-                    color="primary"
-                    onClick={handleTrainModel}
-                    startIcon={<Icon>scatter_plot</Icon>} >
-                    <Typography variant="button">
-                        Train
-                    </Typography>
-                </Button>
-            </Box>
-
-            <Box className="predict-controls">
-                <Typography variant="h2">Predicting</Typography>
-                <Input
-                    className="field element"
-                    value={modelState.valueToPredict}
-                    name="valueToPredict"
-                    onChange={handleModelChange}
-                    type="number"
-                    placeholder="Enter an integer" /><br />
-                <Box className="element label-prediction">
-                    {
-                        /* conditional rendering */
-                        modelState.loading ? 
-                            <Loader
-                            className="loader"
-                            type="Bars"
-                            color="#00DE00"
-                            height={32}
-                            width={32}
-                            />
-                        :    
-                            <Typography variant="h5">
-                                {modelState.predictedValue}
+        <React.Fragment>
+            <Header name="Linear Regression" />
+            <Box className="linear-regression">
+                <Box className="train-controls">
+                    <Typography variant="h2">Linear Regression</Typography>
+                    <Typography variant="subtitle1" className="section">Training Data (x,y) pairs</Typography>
+                    <Box className="row labels">
+                        <Box className="field-label column">
+                            <Typography variant="h6">
+                                X
                             </Typography>
-                    }
+                        </Box>
+                        <Box className="field-label column">
+                            <Typography variant="h6">
+                                Y
+                            </Typography>
+                        </Box>
+                    </Box>
+
+                    {valuePairsState.map((val, index) => {
+                        return (
+                            <Box key={index} className="row">
+                                <Input
+                                    className="field field-x column"
+                                    value={val.x}
+                                    name="x"
+                                    data-index={index}
+                                    onChange={handleValuePairChange}
+                                    type="number" />
+                            
+                                <Input
+                                    className="field field-y column"
+                                    value={val.y}
+                                    name="y"
+                                    data-index={index}
+                                    onChange={handleValuePairChange}
+                                    type="number" />
+                            </Box>
+                        )
+                    })}
+                
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={handleAddItem}
+                        startIcon={<Icon>add</Icon>} >
+                            <Typography variant="button">
+                                Add a new pair
+                            </Typography>
+                    </Button>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={handleDeleteItem}
+                        startIcon={<Icon>delete</Icon>} >
+                            <Typography variant="button">
+                                Delete last pair
+                            </Typography>
+                    </Button>
+                    <Button
+                        variant="contained" 
+                        color="primary"
+                        onClick={handleTrainModel}
+                        startIcon={<Icon>scatter_plot</Icon>} >
+                        <Typography variant="button">
+                            Train
+                        </Typography>
+                    </Button>
                 </Box>
-                <Button
-                    variant="contained"
-                    color="secondary"
-                    onClick={handlePredict}
-                    disabled={!modelState.trained}>
-                    <Typography variant="button">
-                        Predict
-                    </Typography>
-                </Button>
+
+                <Box className="predict-controls">
+                    <Typography variant="h2">Predicting</Typography>
+                    <Input
+                        className="field element"
+                        value={modelState.valueToPredict}
+                        name="valueToPredict"
+                        onChange={handleModelChange}
+                        type="number"
+                        placeholder="Enter an integer" /><br />
+                    <Box className="element label-prediction">
+                        {
+                            /* conditional rendering */
+                            modelState.loading ? 
+                                <Loader
+                                className="loader"
+                                type="Bars"
+                                color="#00DE00"
+                                height={32}
+                                width={32}
+                                />
+                            :    
+                                <Typography variant="h5">
+                                    {modelState.predictedValue}
+                                </Typography>
+                        }
+                    </Box>
+                    <Button
+                        variant="contained"
+                        color="secondary"
+                        onClick={handlePredict}
+                        disabled={!modelState.trained}>
+                        <Typography variant="button">
+                            Predict
+                        </Typography>
+                    </Button>
+                </Box>
             </Box>
-        </Box>
+        </React.Fragment>
     )
 }
 

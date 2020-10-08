@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react'
 import Loader from 'react-loader-spinner'
 import PropTypes from 'prop-types'
+import Header from './Header'
 
 import * as mn from '@tensorflow-models/mobilenet'
 import * as tf from '@tensorflow/tfjs'
@@ -38,6 +39,7 @@ const MobileNet = () => {
     // "clsImage" is an argument, "setClsImage" is a function.
     const [clsImage, setClsImage] = useState([])
     const [clsVideo, setClsVideo] = useState([])
+    const [videoStream, setVideoStream] = useState(true)
 
     
     // You can think of the useEffect Hook as componentDidMount, 
@@ -102,7 +104,7 @@ const MobileNet = () => {
 
     // Video classification.
     async function videoClassification() {
-        while(true) {
+        while(videoStream) {
             const img = await webcam.capture()
             const result = await net.classify(img)
 
@@ -125,8 +127,9 @@ const MobileNet = () => {
     const sleep = ms => new Promise(res => setTimeout(res, ms))
 
     return (
-        <Box className="mobile-net">
-            <Box>
+        <React.Fragment>
+            <Header name="Object Recognition" />
+            <Box className="mobile-net">
                 <Typography variant="h2">MobileNet</Typography>
                 <Box className="video-classification">
                     <Typography variant="h3">Video image classification</Typography>
@@ -197,7 +200,7 @@ const MobileNet = () => {
                     </Box>
                 </Box>
             </Box>
-        </Box>
+        </React.Fragment>
     )
 }
 

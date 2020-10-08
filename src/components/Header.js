@@ -1,22 +1,30 @@
 import React from 'react'
-import { Box, Typography, Link } from '@material-ui/core'
+import { Box, Typography, Link, Divider } from '@material-ui/core'
 
-const Header = () => (
-    <Box className="Header">
-        <Typography variant="h1" color="primary">
-          TensorFlow React JS App
-        </Typography>
-        <Typography variant="subtitle1" color="secondary">
-          This project was based on 
-            <Link 
-              href="https://www.dlighthouse.co/2020/02/creating-tensorflowjs-reactjs-js-app.html"
-              color="primary"> this tutorial
-            </Link>
-        </Typography>
-        <Typography variant="subtitle1" color="secondary">
-          My personal contribution was addition of all the neat functionality around and styles.
-        </Typography>
-    </Box>
-)
+import { makeStyles } from '@material-ui/core/styles'
+
+const useStyles = makeStyles((theme) => ({
+  header: {
+    textAlign: 'center',
+    padding: '48px 32px'
+  },
+
+}))
+
+const Header = ({ name }) => {
+
+    const classes = useStyles()
+
+    return (
+      <React.Fragment>
+        <Box className={classes.header}>
+            <Typography variant="h1" color="primary">
+              {name}
+            </Typography>
+        </Box>
+        <Divider />
+      </React.Fragment>
+    )
+}
 
 export default Header

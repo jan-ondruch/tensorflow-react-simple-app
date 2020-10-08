@@ -2,7 +2,6 @@ import React from 'react'
 
 import LinearRegression from './components/LinearRegression'
 import MobileNet from './components/MobileNet'
-import Header from './components/Header'
 import Navbar from './components/Navbar'
 import About from './components/About'
 
@@ -14,7 +13,6 @@ const App = () => (
   <Box className="App">
       <Router>
         <Navbar />
-        <Header />
         <Switch>
             <Route path="/about">
                 <About />
