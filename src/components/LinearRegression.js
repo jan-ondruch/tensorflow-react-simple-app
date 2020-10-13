@@ -70,7 +70,7 @@ const LinearRegression = () => {
         let xValues = [],
             yValues = []
 
-        valuePairsState.forEach((val, index) => {
+        valuePairsState.forEach(val => {
             xValues.push(val.x)
             yValues.push(val.y)
         })

@@ -11,22 +11,22 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom"
 
 const App = () => (
   <Box className="App">
-      <Router>
-        <Navbar />
-        <Switch>
-            <Route path="/about">
-                <About />
-            </Route>
-            <Route path="/linear-regression">
-              <LinearRegression/>
-            </Route>
-            <Route path="/">
-              <MobileNet>
-                <p>Children of the net!</p>
-              </MobileNet>
-            </Route>
-        </Switch>
-      </Router>
+    <Router>
+      <Navbar />
+      <Switch>
+        <Route path="/about">
+          <About />
+        </Route>
+        <Route path="/linear-regression">
+          <LinearRegression />
+        </Route>
+        <Route path="/">
+          <MobileNet>
+            <p>Children of the net!</p>
+          </MobileNet>
+        </Route>
+      </Switch>
+    </Router>
   </Box>
 )
 
