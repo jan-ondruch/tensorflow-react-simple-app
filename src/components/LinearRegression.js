@@ -12,11 +12,11 @@ const LinearRegression = () => {
     // Value pairs state
     const [valuePairsState, setValuePairsState] = useState([
         { x: -1, y: -3 },
-        { x: 0, y: -1},
-        { x: 1, y: 1},
-        { x: 2, y: 3},
-        { x: 3, y: 5},
-        { x: 4, y: 7},
+        { x: 0, y: -1 },
+        { x: 1, y: 1 },
+        { x: 2, y: 3 },
+        { x: 3, y: 5 },
+        { x: 4, y: 7 },
     ])
 
     // Define the model state
@@ -50,7 +50,7 @@ const LinearRegression = () => {
 
     const handleDeleteItem = () => {
         setValuePairsState([
-            ...valuePairsState.slice(0,valuePairsState.length-1)
+            ...valuePairsState.slice(0, valuePairsState.length - 1)
         ])
     }
 
@@ -77,7 +77,7 @@ const LinearRegression = () => {
 
         // Define a model for linear regression.
         const model = tf.sequential()
-        model.add(tf.layers.dense({ units: 1, inputShape: [1]}))
+        model.add(tf.layers.dense({ units: 1, inputShape: [1] }))
 
         // Prepare the model for training: Specify the loss and the optimizer.
         model.compile({ loss: 'meanSquaredError', optimizer: 'sgd' })
@@ -138,7 +138,7 @@ const LinearRegression = () => {
                                     data-index={index}
                                     onChange={handleValuePairChange}
                                     type="number" />
-                            
+
                                 <Input
                                     className="field field-y column"
                                     value={val.y}
@@ -149,14 +149,14 @@ const LinearRegression = () => {
                             </Box>
                         )
                     })}
-                
+
                     <Button
                         variant="contained"
                         color="primary"
                         onClick={handleAddItem}
                         startIcon={<Icon>add</Icon>} >
-                            <Typography variant="button">
-                                Add a new pair
+                        <Typography variant="button">
+                            Add a new pair
                             </Typography>
                     </Button>
                     <Button
@@ -164,12 +164,12 @@ const LinearRegression = () => {
                         color="primary"
                         onClick={handleDeleteItem}
                         startIcon={<Icon>delete</Icon>} >
-                            <Typography variant="button">
-                                Delete last pair
+                        <Typography variant="button">
+                            Delete last pair
                             </Typography>
                     </Button>
                     <Button
-                        variant="contained" 
+                        variant="contained"
                         color="primary"
                         onClick={handleTrainModel}
                         startIcon={<Icon>scatter_plot</Icon>} >
@@ -191,15 +191,15 @@ const LinearRegression = () => {
                     <Box className="element label-prediction">
                         {
                             /* conditional rendering */
-                            modelState.loading ? 
+                            modelState.loading ?
                                 <Loader
-                                className="loader"
-                                type="Bars"
-                                color="#00DE00"
-                                height={32}
-                                width={32}
+                                    className="loader"
+                                    type="Bars"
+                                    color="#00DE00"
+                                    height={32}
+                                    width={32}
                                 />
-                            :    
+                                :
                                 <Typography variant="h5">
                                     {modelState.predictedValue}
                                 </Typography>
