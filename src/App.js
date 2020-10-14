@@ -5,29 +5,34 @@ import MobileNet from './components/MobileNet'
 import Navbar from './components/Navbar'
 import About from './components/About'
 
+import { createMuiTheme, responsiveFontSizes, ThemeProvider } from '@material-ui/core/styles'
 import { Box } from '@material-ui/core'
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom"
 
+let theme = createMuiTheme()
+theme = responsiveFontSizes(theme)  // generate reponsive typography
 
 const App = () => (
-  <Box className="App">
-    <Router>
-      <Navbar />
-      <Switch>
-        <Route path="/about">
-          <About />
-        </Route>
-        <Route path="/linear-regression">
-          <LinearRegression />
-        </Route>
-        <Route path="/">
-          <MobileNet>
-            <p>Children of the net!</p>
-          </MobileNet>
-        </Route>
-      </Switch>
-    </Router>
-  </Box>
+  <ThemeProvider theme={theme}>
+    <Box className="App">
+      <Router>
+        <Navbar />
+        <Switch>
+          <Route path="/about">
+            <About />
+          </Route>
+          <Route path="/linear-regression">
+            <LinearRegression />
+          </Route>
+          <Route path="/">
+            <MobileNet>
+              <p>Children of the net!</p>
+            </MobileNet>
+          </Route>
+        </Switch>
+      </Router>
+    </Box>
+  </ThemeProvider>
 )
 
 export default App
