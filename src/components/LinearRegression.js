@@ -4,11 +4,51 @@ import * as tf from '@tensorflow/tfjs'
 import Loader from 'react-loader-spinner'
 import Header from './Header'
 
-import './LinearRegression.css'
+import { Box, Button, Typography, Input, Icon, makeStyles } from '@material-ui/core'
 
-import { Box, Button, Typography, Input, Icon } from '@material-ui/core'
+const useStyles = makeStyles((theme) => ({
+    linearRegression: {
+        paddingTop: '24px'
+    },
+    row: {
+        display: 'flex',
+        justifyContent: 'center',
+    },
+    field: {
+        margin: '12px 16px',
+        [theme.breakpoints.up('xs')]: {
+            width: '140px'
+        },
+        [theme.breakpoints.up('sm')]: {
+            width: '150px'
+        },
+        [theme.breakpoints.up('md')]: {
+            width: '200px'
+        },
+    },
+    buttonsWrapper: {
+        justifyContent: 'center'
+    },
+    button: {
+        [theme.breakpoints.up('xs')]: {
+            margin: '6px'
+        },
+        [theme.breakpoints.up('sm')]: {
+            margin: '8px 12px'
+        },
+        [theme.breakpoints.up('md')]: {
+            margin: '10px 18px'
+        },
+        "&:last-child": {
+            display: 'flex'
+        }
+    }
+}))
 
 const LinearRegression = () => {
+
+    const classes = useStyles()
+
     // Value pairs state
     const [valuePairsState, setValuePairsState] = useState([
         { x: -1, y: -3 },
@@ -29,9 +69,9 @@ const LinearRegression = () => {
     })
 
     // Event handlers
-    const handleValuePairChange = (e) => {
+    const handleValuePairChange = e => {
         const updatedValuePairs = update(valuePairsState, {
-            [e.target.dataset.index]: {
+            [e.target.id]: {
                 [e.target.name]: { $set: parseInt(e.target.value) }
             }
         })
@@ -54,7 +94,7 @@ const LinearRegression = () => {
         ])
     }
 
-    const handleModelChange = (e) => setModelState({
+    const handleModelChange = e => setModelState({
         ...modelState,
         [e.target.name]: [parseInt(e.target.value)],
     })
@@ -111,18 +151,21 @@ const LinearRegression = () => {
     return (
         <React.Fragment>
             <Header name="Linear Regression" />
-            <Box className="linear-regression">
+            <Box 
+                align="center" 
+                px={{ xs: 2, sm: 12, md: 16, lg: 64, xl: 86 }}
+                pt={{ xs: 4, lg: 8, xl: 12 }}
+            >
                 <Box className="train-controls">
-                    <Typography variant="h2">Linear Regression</Typography>
                     <Typography variant="subtitle1" className="section">Training Data (x,y) pairs</Typography>
-                    <Box className="row labels">
-                        <Box className="field-label column">
-                            <Typography variant="h6">
+                    <Box className={classes.row}>
+                        <Box>
+                            <Typography variant="h6" className={classes.field}>
                                 X
                             </Typography>
                         </Box>
-                        <Box className="field-label column">
-                            <Typography variant="h6">
+                        <Box className={classes.labelTable}>
+                            <Typography variant="h6" className={classes.field}>
                                 Y
                             </Typography>
                         </Box>
@@ -130,57 +173,62 @@ const LinearRegression = () => {
 
                     {valuePairsState.map((val, index) => {
                         return (
-                            <Box key={index} className="row">
+                            <Box key={index} className={classes.row}>
                                 <Input
-                                    className="field field-x column"
+                                    className={classes.field}
                                     value={val.x}
                                     name="x"
-                                    data-index={index}
+                                    id={`${index}`} // ugly
                                     onChange={handleValuePairChange}
                                     type="number" />
 
                                 <Input
-                                    className="field field-y column"
+                                    className={classes.field}
                                     value={val.y}
+                                    id={`${index}`} // ugly
                                     name="y"
-                                    data-index={index}
                                     onChange={handleValuePairChange}
                                     type="number" />
                             </Box>
                         )
                     })}
 
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={handleAddItem}
-                        startIcon={<Icon>add</Icon>} >
-                        <Typography variant="button">
-                            Add a new pair
+                    <Box className={classes.buttonsWrapper}>
+                        <Button
+                            className={classes.button}
+                            variant="contained"
+                            color="primary"
+                            onClick={handleAddItem}
+                            startIcon={<Icon>add</Icon>} >
+                            <Typography variant="button">
+                                Add new pair
+                                </Typography>
+                        </Button>
+                        <Button
+                            className={classes.button}
+                            variant="contained"
+                            color="primary"
+                            onClick={handleDeleteItem}
+                            startIcon={<Icon>delete</Icon>} >
+                            <Typography variant="button">
+                                Delete last pair
+                                </Typography>
+                        </Button>
+                        <Button
+                            className={classes.button}
+                            variant="contained"
+                            color="secondary"
+                            onClick={handleTrainModel}
+                            startIcon={<Icon>scatter_plot</Icon>} >
+                            <Typography variant="button">
+                                Train
                             </Typography>
-                    </Button>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={handleDeleteItem}
-                        startIcon={<Icon>delete</Icon>} >
-                        <Typography variant="button">
-                            Delete last pair
-                            </Typography>
-                    </Button>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={handleTrainModel}
-                        startIcon={<Icon>scatter_plot</Icon>} >
-                        <Typography variant="button">
-                            Train
-                        </Typography>
-                    </Button>
+                        </Button>
+                    </Box>
                 </Box>
 
                 <Box className="predict-controls">
-                    <Typography variant="h2">Predicting</Typography>
+                    <Typography variant="subtitle1">Prediction</Typography>
                     <Input
                         className="field element"
                         value={modelState.valueToPredict}
