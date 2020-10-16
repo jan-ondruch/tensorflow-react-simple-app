@@ -15,63 +15,24 @@ const useStyles = makeStyles(() => ({
 
 }))
 
-// Earlier, when we wanted to use hooks - include any state to it, 
-// we had to transform the function componenent into class.
-// This is no longer necessary (since 16.8.0).
-// React Native supports them, as well (since 0.59).
-// You can still use the old solution, it is 100% bw compatible.
-// We can use these new hooks in functional components.
-
-// Functional Component or Stateless Component
-// (opposed to a Class Component or Stateful Component)
-// No "render()" used in these components.
-// (opposed to a Class Component, which must have it)
-// Use functional components as much as you can, because they are
-// easier to read, test, maintain. If you don't have to use classes
-// don't use them!
 const MobileNet = () => {
 
     const classes = useStyles()
 
-    // Declare a new state variable called "clsImage".
-    // Before 2018, we would need to write a constructor here and then change the
-    // state via "this.state.clsImage".
-    //
-    // Now, we just use the new useState hook, that lets us add React state to
-    // function components.
-    //
-    // Why the square brackets? Array destructing syntax.
-    //
-    // We just pass an initial state to this function at its definition.
-    // "clsImage" is an argument, "setClsImage" is a function.
     const [clsImage, setClsImage] = useState([])
     const [clsVideo, setClsVideo] = useState([])
-    const [captureVideo, setCaptureVideo] = useState(true)
     const componentIsMounted = useRef(true)
     const camera = useRef({
         net: {},
         webcam: {}
     })
+    let webCamStop
 
-    // You can think of the useEffect Hook as componentDidMount, 
-    // componentDidUpdate, and componentWillUnmount combined.
-    //
-    // Hooks can be used to replicated lifecycle behavior.
-    //
-    // By default, useEffect runs after every render -
-    // "things that happen after render".
-    //
-    // The empty array ensures this hook will run only on an initial render,
-    // otherwise setUpForInterface() is called in loop.
-    // Alternatively, we can add there an argument, on which the Hook
-    // will be called again.
     useEffect(() => {
         // TODO: add a cancellation token for async
         async function loadMobileNet() {
             try {
                 camera.current.net = await mn.load()
-                console.log('Successfully loaded model!')
-
                 if (componentIsMounted.current) {
                     loadWebCam()
                 }
@@ -80,44 +41,44 @@ const MobileNet = () => {
             }
         }
         loadMobileNet()
-        
-        async function loadWebCam() {
-            const webcamElement = document.getElementById('webcam')    // const is block-scoped
-            camera.current.webcam = await tf.data.webcam(webcamElement)
-            console.log("Webcam is loaded!")
-    
-            if (componentIsMounted.current) {
-                videoClassification()
-                classifyImage()
-            }
-        }
-
-        async function videoClassification() {
-            while(captureVideo && componentIsMounted.current) {
-                const img = await camera.current.webcam.capture()
-                const result = await camera.current.net.classify(img)
-    
-                // Just save the last classification.
-                // setClsVideo(result)
-                
-                // Save all classifications.
-                result.map(r => setClsVideo(clsVideo => [...clsVideo, r]))
-    
-                // Dispose the tensor to release the memory.
-                img.dispose()
-    
-                // Give some breathing room by waiting for the next 
-                // animation frame to fire.
-                await sleep(3000)
-                await tf.nextFrame()
-            }
-        }
 
         return () => {
+            if (webCamStop) webCamStop()
             componentIsMounted.current = false
-            console.log('Bye!')
         }
     }, [])
+
+    async function loadWebCam() {
+        const webcamElement = document.getElementById('webcam')
+        camera.current.webcam = await tf.data.webcam(webcamElement)
+        webCamStop = () => camera.current.webcam.stop()
+        
+        if (componentIsMounted.current) {
+            videoClassification()
+            classifyImage()
+        }
+    }
+
+    async function videoClassification() {
+        while(componentIsMounted.current) {
+            const img = await camera.current.webcam.capture()
+            const result = await camera.current.net.classify(img)
+
+            // Just save the last classification.
+            // setClsVideo(result)
+            
+            // Save all classifications.
+            result.map(r => setClsVideo(clsVideo => [...clsVideo, r]))
+
+            // Dispose the tensor to release the memory.
+            img.dispose()
+
+            // Give some breathing room by waiting for the next 
+            // animation frame to fire.
+            await sleep(3000)
+            await tf.nextFrame()
+        }
+    }
 
     // Classify the image and save the results into the state
     async function classifyImage() {
