@@ -68,6 +68,7 @@ const LinearRegression = () => {
     const classes = useStyles()
 
     // Value pairs state
+    // array destructuring
     const [valuePairsState, setValuePairsState] = useState([
         { x: -1, y: -3 },
         { x: 0, y: -1 },

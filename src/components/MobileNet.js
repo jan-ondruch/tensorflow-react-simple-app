@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/img-redundant-alt */
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import Loader from 'react-loader-spinner'
 import PropTypes from 'prop-types'
 import Header from './Header'
@@ -46,7 +46,13 @@ const MobileNet = () => {
     // "clsImage" is an argument, "setClsImage" is a function.
     const [clsImage, setClsImage] = useState([])
     const [clsVideo, setClsVideo] = useState([])
-    
+    const [captureVideo, setCaptureVideo] = useState(true)
+    const componentIsMounted = useRef(true)
+    const camera = useRef({
+        net: {},
+        webcam: {}
+    })
+
     // You can think of the useEffect Hook as componentDidMount, 
     // componentDidUpdate, and componentWillUnmount combined.
     //
@@ -60,73 +66,64 @@ const MobileNet = () => {
     // Alternatively, we can add there an argument, on which the Hook
     // will be called again.
     useEffect(() => {
-        setUpInterface()
-        return () => console.log('unmounted!')
-    }, [])
-    
-    // Component vars
-    // Don't know any better know where to put them (use them as "attributes")
-    // I don't think putting them into state would be a good idea...
-    let net
-    let webcam
-
-    // Load the MobileNet model and call the loadWebCam function.
-    const setUpInterface = () => {
-        // Create an scoped async function in the Hook
-        // Load the net
-        // Async/await is a syntax sugar above promises, making them easier to use.
-        // The word "async" in front of the function name means the function will always
-        // return a promise. Even non-promises are wrapped and returned as promises.
-        // The keyword "await" means that JS waits until the promise resolves and then 
-        // returns its result.
-        // The code literally pauses at that line and does not continue further.
+        // TODO: add a cancellation token for async
         async function loadMobileNet() {
-            net = await mn.load()
-            console.log("Successfully loaded model!")
+            try {
+                camera.current.net = await mn.load()
+                console.log('Successfully loaded model!')
 
-            loadWebCam()
+                if (componentIsMounted.current) {
+                    loadWebCam()
+                }
+            } catch(err) {
+                console.error(err)
+            }
+        }
+        loadMobileNet()
+        
+        async function loadWebCam() {
+            const webcamElement = document.getElementById('webcam')    // const is block-scoped
+            camera.current.webcam = await tf.data.webcam(webcamElement)
+            console.log("Webcam is loaded!")
+    
+            if (componentIsMounted.current) {
+                videoClassification()
+                classifyImage()
+            }
         }
 
-        loadMobileNet()
-    }
+        async function videoClassification() {
+            while(captureVideo && componentIsMounted.current) {
+                const img = await camera.current.webcam.capture()
+                const result = await camera.current.net.classify(img)
+    
+                // Just save the last classification.
+                // setClsVideo(result)
+                
+                // Save all classifications.
+                result.map(r => setClsVideo(clsVideo => [...clsVideo, r]))
+    
+                // Dispose the tensor to release the memory.
+                img.dispose()
+    
+                // Give some breathing room by waiting for the next 
+                // animation frame to fire.
+                await sleep(3000)
+                await tf.nextFrame()
+            }
+        }
 
-    // Load the web cam
-    async function loadWebCam() {
-        const webcamElement = document.getElementById('webcam')    // const is block-scoped
-        webcam = await tf.data.webcam(webcamElement)
-        console.log("Webcam is loaded!")
-
-        videoClassification(true)
-        classifyImage()
-    }
+        return () => {
+            componentIsMounted.current = false
+            console.log('Bye!')
+        }
+    }, [])
 
     // Classify the image and save the results into the state
     async function classifyImage() {
         const imgEl = document.getElementById('mnimg')
-        const results = await net.classify(imgEl)
+        const results = await camera.current.net.classify(imgEl)
         setClsImage(results)
-    }
-
-    // Video classification.
-    async function videoClassification() {
-        while(true) {
-            const img = await webcam.capture()
-            const result = await net.classify(img)
-
-            // Just save the last classification.
-            // setClsVideo(result)
-            
-            // Save all classifications.
-            result.map(r => setClsVideo(clsVideo => [...clsVideo, r]))
-
-            // Dispose the tensor to release the memory.
-            img.dispose()
-
-            // Give some breathing room by waiting for the next 
-            // animation frame to fire.
-            await sleep(3000)
-            await tf.nextFrame()
-        }
     }
 
     const sleep = ms => new Promise(res => setTimeout(res, ms))
@@ -148,17 +145,17 @@ const MobileNet = () => {
                             <Box>
                                 <Typography variant="body1">{clsVideo[clsVideo.length-1].className}</Typography>
                                 <Typography variant="body2">
-                                    p: {clsVideo[clsVideo.length-1].probability.toFixed(2)}
+                                    Probability: {clsVideo[clsVideo.length-1].probability.toFixed(2)}
                                 </Typography>
                             </Box>
                                 :
                             <Box className="wait-for-video">
                                 <Loader
-                                className="loader"
-                                type="Grid"
-                                color="#00DE00"
-                                height={156}
-                                width={156}
+                                    className="loader"
+                                    type="Grid"
+                                    color="#00DE00"
+                                    height={156}
+                                    width={156}
                                 />
                                 <Typography variant="body1">Loading...</Typography>
                             </Box>
@@ -198,11 +195,11 @@ const MobileNet = () => {
                                 clsImage.map((val, index) => <ResultCard key={index} val={val.className} probability={val.probability} />)
                                 :
                             <Loader
-                            className="loader"
-                            type="ThreeDots"
-                            color="#f50057"
-                            height={32}
-                            width={32}
+                                className="loader"
+                                type="ThreeDots"
+                                color="#f50057"
+                                height={32}
+                                width={32}
                             />
                         }
                     </Box>
