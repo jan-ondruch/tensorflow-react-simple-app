@@ -7,15 +7,11 @@ import Header from './Header'
 import { Box, Button, Typography, Input, Icon, makeStyles } from '@material-ui/core'
 
 const useStyles = makeStyles((theme) => ({
-    linearRegression: {
-        paddingTop: '24px'
-    },
     row: {
         display: 'flex',
-        justifyContent: 'center',
+        justifyContent: 'center'
     },
     field: {
-        margin: '12px 16px',
         [theme.breakpoints.up('xs')]: {
             width: '140px'
         },
@@ -25,6 +21,12 @@ const useStyles = makeStyles((theme) => ({
         [theme.breakpoints.up('md')]: {
             width: '200px'
         },
+    },
+    tableLabel: {
+        marginTop: '12px'
+    },
+    tableField: {
+        margin: '10px 12px'
     },
     buttonsWrapper: {
         justifyContent: 'center'
@@ -42,6 +44,22 @@ const useStyles = makeStyles((theme) => ({
         "&:last-child": {
             display: 'flex'
         }
+    },
+    predictControls: {
+        justifyContent: 'center',
+        margin: '32px auto',
+    },
+    predictLabel: {
+        display: 'block'
+    },
+    predictValue: {
+        marginTop: '8px'
+    },
+    predictButton: {
+        marginTop: '12px'
+    },
+    predictLoader: {
+        marginTop: '12px'
     }
 }))
 
@@ -130,7 +148,7 @@ const LinearRegression = () => {
                 ...modelState,
                 model: model,
                 trained: true,
-                predictedValue: 'Ready for making predictions',
+                predictedValue: 'Ready for making predictions!',
                 loading: false,
             })
         })
@@ -154,18 +172,18 @@ const LinearRegression = () => {
             <Box 
                 align="center" 
                 px={{ xs: 2, sm: 12, md: 16, lg: 64, xl: 86 }}
-                pt={{ xs: 4, lg: 8, xl: 12 }}
+                pt={{ xs: 4, lg: 6, xl: 6 }}
             >
-                <Box className="train-controls">
-                    <Typography variant="subtitle1" className="section">Training Data (x,y) pairs</Typography>
+                <Box>
+                    <Typography variant="subtitle1">Training Data (x,y) pairs</Typography>
                     <Box className={classes.row}>
-                        <Box>
-                            <Typography variant="h6" className={classes.field}>
+                        <Box className={classes.tableLabel}>
+                            <Typography variant="body1" className={classes.field}>
                                 X
                             </Typography>
                         </Box>
-                        <Box className={classes.labelTable}>
-                            <Typography variant="h6" className={classes.field}>
+                        <Box className={classes.tableLabel}>
+                            <Typography variant="body1" className={classes.field}>
                                 Y
                             </Typography>
                         </Box>
@@ -175,7 +193,7 @@ const LinearRegression = () => {
                         return (
                             <Box key={index} className={classes.row}>
                                 <Input
-                                    className={classes.field}
+                                    className={`${classes.field} ${classes.tableField}`}
                                     value={val.x}
                                     name="x"
                                     id={`${index}`} // ugly
@@ -183,7 +201,7 @@ const LinearRegression = () => {
                                     type="number" />
 
                                 <Input
-                                    className={classes.field}
+                                    className={`${classes.field} ${classes.tableField}`}
                                     value={val.y}
                                     id={`${index}`} // ugly
                                     name="y"
@@ -227,33 +245,43 @@ const LinearRegression = () => {
                     </Box>
                 </Box>
 
-                <Box className="predict-controls">
-                    <Typography variant="subtitle1">Prediction</Typography>
+                <Box className={classes.predictControls}>
+                    <Typography variant="subtitle1" className={classes.predictLabel}>Prediction</Typography>
                     <Input
-                        className="field element"
+                        className={classes.field}
                         value={modelState.valueToPredict}
                         name="valueToPredict"
                         onChange={handleModelChange}
                         type="number"
                         placeholder="Enter an integer" /><br />
-                    <Box className="element label-prediction">
+                    <Box>
                         {
                             /* conditional rendering */
                             modelState.loading ?
                                 <Loader
-                                    className="loader"
+                                    className={classes.predictLoader}
+                                    color="#f50057"
                                     type="Bars"
-                                    color="#00DE00"
                                     height={32}
                                     width={32}
                                 />
                                 :
-                                <Typography variant="h5">
-                                    {modelState.predictedValue}
-                                </Typography>
+                                <Box className={classes.predictValue}>
+                                    {
+                                        typeof(modelState.predictedValue) === "number" ?
+                                            <Typography variant="h4">
+                                                {modelState.predictedValue.toFixed(2)}
+                                            </Typography>
+                                            :
+                                            <Typography variant="body1">
+                                                {modelState.predictedValue}
+                                            </Typography>
+                                    }
+                                </Box>
                         }
                     </Box>
                     <Button
+                        className={classes.predictButton}
                         variant="contained"
                         color="secondary"
                         onClick={handlePredict}

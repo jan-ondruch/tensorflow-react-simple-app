@@ -7,9 +7,13 @@ import Header from './Header'
 import * as mn from '@tensorflow-models/mobilenet'
 import * as tf from '@tensorflow/tfjs'
 
-import { Box, Typography, Card, CardContent, Button, } from '@material-ui/core'
+import { Box, Typography, Card, CardContent, Button, makeStyles, } from '@material-ui/core'
 
 import './MobileNet.css'
+
+const useStyles = makeStyles(() => ({
+
+}))
 
 // Earlier, when we wanted to use hooks - include any state to it, 
 // we had to transform the function componenent into class.
@@ -23,8 +27,11 @@ import './MobileNet.css'
 // No "render()" used in these components.
 // (opposed to a Class Component, which must have it)
 // Use functional components as much as you can, because they are
-// easier to read, test, maintain.
+// easier to read, test, maintain. If you don't have to use classes
+// don't use them!
 const MobileNet = () => {
+
+    const classes = useStyles()
 
     // Declare a new state variable called "clsImage".
     // Before 2018, we would need to write a constructor here and then change the
@@ -39,8 +46,6 @@ const MobileNet = () => {
     // "clsImage" is an argument, "setClsImage" is a function.
     const [clsImage, setClsImage] = useState([])
     const [clsVideo, setClsVideo] = useState([])
-    const [videoStream, setVideoStream] = useState(true)
-
     
     // You can think of the useEffect Hook as componentDidMount, 
     // componentDidUpdate, and componentWillUnmount combined.
@@ -104,7 +109,7 @@ const MobileNet = () => {
 
     // Video classification.
     async function videoClassification() {
-        while(videoStream) {
+        while(true) {
             const img = await webcam.capture()
             const result = await net.classify(img)
 
@@ -129,10 +134,13 @@ const MobileNet = () => {
     return (
         <React.Fragment>
             <Header name="Object Recognition" />
-            <Box className="mobile-net">
-                <Typography variant="h2">MobileNet</Typography>
-                <Box className="video-classification">
-                    <Typography variant="h3">Video image classification</Typography>
+            <Box
+                align="center" 
+                px={{ xs: 2, sm: 12, md: 16, lg: 64, xl: 86 }}
+                pt={{ xs: 4, lg: 6, xl: 6 }}
+            >
+                <Box>
+                    <Typography variant="subtitle1">Video image classification</Typography>
                     <video autoPlay playsInline muted id="webcam" width="224" height="224"></video>
                     <Box>
                         {
@@ -158,13 +166,13 @@ const MobileNet = () => {
                     </Box>
                 </Box>
                 <Box className="image-classification">
-                    <Typography variant="h3">Image classification</Typography>
+                    <Typography variant="subtitle1">Image classification</Typography>
                     <img 
                         id='mnimg' 
                         src={process.env.PUBLIC_URL + '/images/MobileNetImage.jpg'} 
                         alt="MobileNet image" />
                     <Box>
-                    <Typography variant="h4">Classification results</Typography>
+                    <Typography variant="subtitle2">Result</Typography>
                         {
                             clsImage.length ?
                                 // clsImage.map((val, index) => {
@@ -192,7 +200,7 @@ const MobileNet = () => {
                             <Loader
                             className="loader"
                             type="ThreeDots"
-                            color="#00DE00"
+                            color="#f50057"
                             height={32}
                             width={32}
                             />
