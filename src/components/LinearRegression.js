@@ -237,6 +237,7 @@ const LinearRegression = () => {
                             className={classes.button}
                             variant="contained"
                             color="secondary"
+                            size="large"
                             onClick={handleTrainModel}
                             startIcon={<Icon>scatter_plot</Icon>} >
                             <Typography variant="button">
@@ -285,8 +286,10 @@ const LinearRegression = () => {
                         className={classes.predictButton}
                         variant="contained"
                         color="secondary"
+                        size="large"
                         onClick={handlePredict}
-                        disabled={!modelState.trained}>
+                        disabled={!modelState.trained}
+                    >
                         <Typography variant="button">
                             Predict
                         </Typography>

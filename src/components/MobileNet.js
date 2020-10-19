@@ -7,7 +7,7 @@ import Header from './Header'
 import * as mn from '@tensorflow-models/mobilenet'
 import * as tf from '@tensorflow/tfjs'
 
-import { Box, Typography, Card, CardContent, Button, makeStyles, } from '@material-ui/core'
+import { Box, Typography, Grid, Card, CardContent, Button, makeStyles, } from '@material-ui/core'
 
 import './MobileNet.css'
 
@@ -26,9 +26,10 @@ const MobileNet = () => {
         net: {},
         webcam: {}
     })
-    let webCamStop
 
     useEffect(() => {
+        let webCamStop
+
         // TODO: add a cancellation token for async
         async function loadMobileNet() {
             try {
@@ -41,44 +42,44 @@ const MobileNet = () => {
             }
         }
         loadMobileNet()
+    
+        async function loadWebCam() {
+            const webcamElement = document.getElementById('webcam')
+            camera.current.webcam = await tf.data.webcam(webcamElement)
+            webCamStop = () => camera.current.webcam.stop()
+            
+            if (componentIsMounted.current) {
+                videoClassification()
+                classifyImage()
+            }
+        }
+
+        async function videoClassification() {
+            while(componentIsMounted.current) {
+                const img = await camera.current.webcam.capture()
+                const result = await camera.current.net.classify(img)
+    
+                // Just save the last classification.
+                // setClsVideo(result)
+                
+                // Save all classifications.
+                result.map(r => setClsVideo(clsVideo => [...clsVideo, r]))
+    
+                // Dispose the tensor to release the memory.
+                img.dispose()
+    
+                // Give some breathing room by waiting for the next 
+                // animation frame to fire.
+                await sleep(3000)
+                await tf.nextFrame()
+            }
+        }
 
         return () => {
             if (webCamStop) webCamStop()
             componentIsMounted.current = false
         }
     }, [])
-
-    async function loadWebCam() {
-        const webcamElement = document.getElementById('webcam')
-        camera.current.webcam = await tf.data.webcam(webcamElement)
-        webCamStop = () => camera.current.webcam.stop()
-        
-        if (componentIsMounted.current) {
-            videoClassification()
-            classifyImage()
-        }
-    }
-
-    async function videoClassification() {
-        while(componentIsMounted.current) {
-            const img = await camera.current.webcam.capture()
-            const result = await camera.current.net.classify(img)
-
-            // Just save the last classification.
-            // setClsVideo(result)
-            
-            // Save all classifications.
-            result.map(r => setClsVideo(clsVideo => [...clsVideo, r]))
-
-            // Dispose the tensor to release the memory.
-            img.dispose()
-
-            // Give some breathing room by waiting for the next 
-            // animation frame to fire.
-            await sleep(3000)
-            await tf.nextFrame()
-        }
-    }
 
     // Classify the image and save the results into the state
     async function classifyImage() {
@@ -97,15 +98,20 @@ const MobileNet = () => {
                 px={{ xs: 2, sm: 12, md: 16, lg: 64, xl: 86 }}
                 pt={{ xs: 4, lg: 6, xl: 6 }}
             >
-                <Box>
-                    <Typography variant="subtitle1">Video image classification</Typography>
+                <Box pb={{ xs: 4, lg: 6, xl: 6 }}>
+                    <Typography 
+                        variant="h2"
+                        gutterBottom
+                    >
+                        Video image classification
+                    </Typography>
                     <video autoPlay playsInline muted id="webcam" width="224" height="224"></video>
                     <Box>
                         {
                             clsVideo.length ?
                             <Box>
-                                <Typography variant="body1">{clsVideo[clsVideo.length-1].className}</Typography>
-                                <Typography variant="body2">
+                                <Typography variant="body1" content="p">{clsVideo[clsVideo.length-1].className}</Typography>
+                                <Typography variant="body2" content="p">
                                     Probability: {clsVideo[clsVideo.length-1].probability.toFixed(2)}
                                 </Typography>
                             </Box>
@@ -118,42 +124,33 @@ const MobileNet = () => {
                                     height={156}
                                     width={156}
                                 />
-                                <Typography variant="body1">Loading...</Typography>
+                                <Typography variant="body1">Loading camera...</Typography>
                             </Box>
                         }
                     </Box>
                 </Box>
-                <Box className="image-classification">
-                    <Typography variant="subtitle1">Image classification</Typography>
+                <Box pb={{ xs: 2, lg: 4, xl: 4 }}>
+                    <Typography 
+                        variant="h2"
+                        gutterBottom   
+                    >
+                        Image classification
+                    </Typography>
                     <img 
                         id='mnimg' 
                         src={process.env.PUBLIC_URL + '/images/MobileNetImage.jpg'} 
                         alt="MobileNet image" />
-                    <Box>
-                    <Typography variant="subtitle2">Result</Typography>
+                    <Box mt={{ xs: 2, lg: 4, xl: 4 }}>
+                    <Typography variant="subtitle2" gutterBottom>Result</Typography>
                         {
                             clsImage.length ?
-                                // clsImage.map((val, index) => {
-                                //     return (
-                                //         <Box key={index} className="row">
-                                //             <Box
-                                //                 className="field field-x column"
-                                //                 name="className"
-                                //                 data-index={index}>
-                                //                 {val.className}
-                                //             </Box>
-                                //             <ResultCard />
-                                //             <Box 
-                                //                 className="field field-y column"
-                                //                 value={val.probability}
-                                //                 name="probability"
-                                //                 data-index={index}>
-                                //                 {val.probability.toFixed(2)}
-                                //             </Box>
-                                //         </Box>
-                                //     )
-                                // })
-                                clsImage.map((val, index) => <ResultCard key={index} val={val.className} probability={val.probability} />)
+                            <Grid container spacing={3}>
+                                {clsImage.map((val, index) => 
+                                    <ResultCard 
+                                        key={index} 
+                                        val={val.className} 
+                                        probability={val.probability} />)}
+                            </Grid>
                                 :
                             <Loader
                                 className="loader"
@@ -184,33 +181,42 @@ const ResultCard = ({val, probability, index}) => {
             setShowProbability(true)
     )
 
-    React.useEffect(() => {
+    useEffect(() => {
         console.log('show probability changed!')
     }, [showProbability])
 
     return (
-        <Card index={index}>
-            <CardContent>
-                <Typography variant="h5">
-                    {val}
-                </Typography>
-                <Button
-                     variant="contained" 
-                     color="primary"
-                     onClick={handleChangeButtonText}
-                >
-                    <Typography variant="button">
-                        Toggle probability
+        <Grid item xs={12} >
+            <Card 
+                index={index}
+
+            >
+                <CardContent>
+                    <Typography 
+                        variant="h5" 
+                        content="h3"
+                        align="left"
+                    >
+                        {val}
                     </Typography>
-                </Button>
-                {
-                    showProbability &&
-                    <Typography variant="subtitle1">
-                        {probability}
-                    </Typography>
-                }
-            </CardContent>      
-        </Card>
+                    <Button
+                        variant="contained" 
+                        color="primary"
+                        onClick={handleChangeButtonText}
+                    >
+                        <Typography variant="button">
+                            Toggle probability
+                        </Typography>
+                    </Button>
+                    {
+                        showProbability &&
+                        <Typography variant="subtitle1">
+                            {probability}
+                        </Typography>
+                    }
+                </CardContent>      
+            </Card>
+        </Grid>
     )
 }
 
