@@ -11,8 +11,11 @@ import { Box, Typography, Grid, Card, CardContent, Button, makeStyles, } from '@
 
 import './MobileNet.css'
 
-const useStyles = makeStyles(() => ({
-
+const useStyles = makeStyles((theme) => ({
+    gridItem: {
+        textAlign: 'center',
+        padding: theme.spacing(2)
+    },
 }))
 
 const MobileNet = () => {
@@ -93,14 +96,14 @@ const MobileNet = () => {
     return (
         <React.Fragment>
             <Header name="Object Recognition" />
-            <Box
-                align="center" 
-                px={{ xs: 2, sm: 12, md: 16, lg: 64, xl: 86 }}
-                pt={{ xs: 4, lg: 6, xl: 6 }}
+            <Grid
+                container
+                direction="row"
+                style={{margin: '0 auto'}}
             >
-                <Box pb={{ xs: 4, lg: 6, xl: 6 }}>
+                <Grid item xs={12} md={6} className={classes.gridItem}>
                     <Typography 
-                        variant="h2"
+                        variant="subtitle1"
                         gutterBottom
                     >
                         Video image classification
@@ -128,10 +131,10 @@ const MobileNet = () => {
                             </Box>
                         }
                     </Box>
-                </Box>
-                <Box pb={{ xs: 2, lg: 4, xl: 4 }}>
+                </Grid>
+                <Grid item xs={12} md={6} className={classes.gridItem}>
                     <Typography 
-                        variant="h2"
+                        variant="subtitle1"
                         gutterBottom   
                     >
                         Image classification
@@ -140,8 +143,8 @@ const MobileNet = () => {
                         id='mnimg' 
                         src={process.env.PUBLIC_URL + '/images/MobileNetImage.jpg'} 
                         alt="MobileNet image" />
-                    <Box mt={{ xs: 2, lg: 4, xl: 4 }}>
-                    <Typography variant="subtitle2" gutterBottom>Result</Typography>
+                    <Grid>
+                        <Typography variant="subtitle2" gutterBottom>Result</Typography>
                         {
                             clsImage.length ?
                             <Grid container spacing={3}>
@@ -160,9 +163,9 @@ const MobileNet = () => {
                                 width={32}
                             />
                         }
-                    </Box>
-                </Box>
-            </Box>
+                    </Grid>
+                </Grid>
+            </Grid>
         </React.Fragment>
     )
 }
@@ -186,14 +189,14 @@ const ResultCard = ({val, probability, index}) => {
     }, [showProbability])
 
     return (
-        <Grid item xs={12} >
+        <Grid item xs={12} lg={4}>
             <Card 
                 index={index}
 
             >
                 <CardContent>
                     <Typography 
-                        variant="h5" 
+                        variant="subtitle1" 
                         content="h3"
                         align="left"
                     >

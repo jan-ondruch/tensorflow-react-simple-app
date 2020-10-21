@@ -39,7 +39,6 @@ const useStyles = makeStyles((theme) => ({
     link: {
         color: '#fff',
         textDecoration: 'none',
-        letterSpacing: '1px',
         '&:hover': {
             color: '#00FE00'
         }

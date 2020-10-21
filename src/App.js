@@ -6,7 +6,7 @@ import Navbar from './components/Navbar'
 import About from './components/About'
 
 import { createMuiTheme, responsiveFontSizes, ThemeProvider } from '@material-ui/core/styles'
-import { Box } from '@material-ui/core'
+import { Grid } from '@material-ui/core'
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom"
 
 let theme = createMuiTheme()
@@ -14,7 +14,7 @@ theme = responsiveFontSizes(theme)  // generate reponsive typography
 
 const App = () => (
   <ThemeProvider theme={theme}>
-    <Box className="App">
+    <Grid className="App">
       <Router>
         <Navbar />
         <Switch>
@@ -31,7 +31,7 @@ const App = () => (
           </Route>
         </Switch>
       </Router>
-    </Box>
+    </Grid>
   </ThemeProvider>
 )
 

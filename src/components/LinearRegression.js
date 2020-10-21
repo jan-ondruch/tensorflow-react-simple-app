@@ -4,9 +4,13 @@ import * as tf from '@tensorflow/tfjs'
 import Loader from 'react-loader-spinner'
 import Header from './Header'
 
-import { Box, Button, Typography, Input, Icon, makeStyles } from '@material-ui/core'
+import { Grid, Box, Button, Typography, Input, Icon, makeStyles } from '@material-ui/core'
 
 const useStyles = makeStyles((theme) => ({
+    gridItem: {
+        textAlign: 'center',
+        padding: theme.spacing(2)
+    },
     row: {
         display: 'flex',
         justifyContent: 'center'
@@ -42,12 +46,13 @@ const useStyles = makeStyles((theme) => ({
             margin: '10px 18px'
         },
         "&:last-child": {
-            display: 'flex'
+            display: 'flex',
+            margin: 'auto',
+            marginTop: theme.spacing(2)
         }
     },
-    predictControls: {
-        justifyContent: 'center',
-        margin: '32px auto',
+    predictWrapper: {
+        paddingTop: theme.spacing(4)
     },
     predictLabel: {
         display: 'block'
@@ -170,12 +175,13 @@ const LinearRegression = () => {
     return (
         <React.Fragment>
             <Header name="Linear Regression" />
-            <Box 
-                align="center" 
-                px={{ xs: 2, sm: 12, md: 16, lg: 64, xl: 86 }}
-                pt={{ xs: 4, lg: 6, xl: 6 }}
+            <Grid
+                container
+                direction="row"
+                lg={8} xl={6}
+                style={{margin: '0 auto'}}
             >
-                <Box>
+                <Grid item xs={12} sm={6} className={classes.gridItem}>
                     <Typography variant="subtitle1">Training Data (x,y) pairs</Typography>
                     <Box className={classes.row}>
                         <Box className={classes.tableLabel}>
@@ -211,7 +217,10 @@ const LinearRegression = () => {
                             </Box>
                         )
                     })}
+                </Grid>
 
+                <Grid item xs={12} sm={6} className={classes.gridItem}>
+                    <Typography variant="subtitle1">Controls</Typography>
                     <Box className={classes.buttonsWrapper}>
                         <Button
                             className={classes.button}
@@ -227,6 +236,7 @@ const LinearRegression = () => {
                             className={classes.button}
                             variant="contained"
                             color="primary"
+                            justify="center"
                             onClick={handleDeleteItem}
                             startIcon={<Icon>delete</Icon>} >
                             <Typography variant="button">
@@ -245,57 +255,57 @@ const LinearRegression = () => {
                             </Typography>
                         </Button>
                     </Box>
-                </Box>
 
-                <Box className={classes.predictControls}>
-                    <Typography variant="subtitle1" className={classes.predictLabel}>Prediction</Typography>
-                    <Input
-                        className={classes.field}
-                        value={modelState.valueToPredict}
-                        name="valueToPredict"
-                        onChange={handleModelChange}
-                        type="number"
-                        placeholder="Enter an integer" /><br />
-                    <Box>
-                        {
-                            /* conditional rendering */
-                            modelState.loading ?
-                                <Loader
-                                    className={classes.predictLoader}
-                                    color="#f50057"
-                                    type="Bars"
-                                    height={32}
-                                    width={32}
-                                />
-                                :
-                                <Box className={classes.predictValue}>
-                                    {
-                                        typeof(modelState.predictedValue) === "number" ?
-                                            <Typography variant="h4">
-                                                {modelState.predictedValue.toFixed(2)}
-                                            </Typography>
-                                            :
-                                            <Typography variant="body1">
-                                                {modelState.predictedValue}
-                                            </Typography>
-                                    }
-                                </Box>
-                        }
+                    <Box className={classes.predictWrapper}>
+                        <Typography variant="subtitle1" className={classes.predictLabel}>Prediction</Typography>
+                        <Input
+                            className={classes.field}
+                            value={modelState.valueToPredict}
+                            name="valueToPredict"
+                            onChange={handleModelChange}
+                            type="number"
+                            placeholder="Enter an integer" /><br />
+                        <Box>
+                            {
+                                /* conditional rendering */
+                                modelState.loading ?
+                                    <Loader
+                                        className={classes.predictLoader}
+                                        color="#f50057"
+                                        type="Bars"
+                                        height={32}
+                                        width={32}
+                                    />
+                                    :
+                                    <Box className={classes.predictValue}>
+                                        {
+                                            typeof (modelState.predictedValue) === "number" ?
+                                                <Typography variant="h4">
+                                                    {modelState.predictedValue.toFixed(2)}
+                                                </Typography>
+                                                :
+                                                <Typography variant="body1">
+                                                    {modelState.predictedValue}
+                                                </Typography>
+                                        }
+                                    </Box>
+                            }
+                        </Box>
+                        <Button
+                            className={classes.predictButton}
+                            variant="contained"
+                            color="secondary"
+                            size="large"
+                            onClick={handlePredict}
+                            disabled={!modelState.trained}
+                        >
+                            <Typography variant="button">
+                                Predict
+                            </Typography>
+                        </Button>
                     </Box>
-                    <Button
-                        className={classes.predictButton}
-                        variant="contained"
-                        color="secondary"
-                        size="large"
-                        onClick={handlePredict}
-                        disabled={!modelState.trained}
-                    >
-                        <Typography variant="button">
-                            Predict
-                        </Typography>
-                    </Button>
-                </Box>
-            </Box>
+                </Grid>
+            </Grid>
         </React.Fragment>
     )
 }
