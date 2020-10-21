@@ -7,7 +7,7 @@ import Header from './Header'
 import * as mn from '@tensorflow-models/mobilenet'
 import * as tf from '@tensorflow/tfjs'
 
-import { Box, Typography, Grid, Card, CardContent, Button, makeStyles, } from '@material-ui/core'
+import { Box, Typography, Grid, Card, CardContent, Button, makeStyles, CardActions, } from '@material-ui/core'
 
 import './MobileNet.css'
 
@@ -144,10 +144,9 @@ const MobileNet = () => {
                         src={process.env.PUBLIC_URL + '/images/MobileNetImage.jpg'} 
                         alt="MobileNet image" />
                     <Grid>
-                        <Typography variant="subtitle2" gutterBottom>Result</Typography>
                         {
                             clsImage.length ?
-                            <Grid container spacing={3}>
+                            <Grid container spacing={2}>
                                 {clsImage.map((val, index) => 
                                     <ResultCard 
                                         key={index} 
@@ -189,19 +188,28 @@ const ResultCard = ({val, probability, index}) => {
     }, [showProbability])
 
     return (
-        <Grid item xs={12} lg={4}>
-            <Card 
-                index={index}
-
-            >
+        <Grid item xs={12} sm={6} md={3} lg={3}>
+            <Card index={index}>
                 <CardContent>
-                    <Typography 
-                        variant="subtitle1" 
-                        content="h3"
-                        align="left"
-                    >
-                        {val}
+                    <Typography variant="subtitle1" content="h3" align="left">
+                        {
+                            // 1. If there are more values classified, e.g. "Terrier, American Terrier",
+                            // only the first value will be taken.
+                            // 2. If the first letter is lowerCase, it will be transformed into upperCase
+                            val.includes(',') ? 
+                                val.split(/,(.+)/)[0].toUpperCase() ? 
+                                    val.split(/,(.+)/)[0].replace(/^./, val.split(/,(.+)/)[0][0].toUpperCase()) 
+                                    : 
+                                    val 
+                                : 
+                                val.toUpperCase() ?
+                                    val.replace(/^./, val[0].toUpperCase()) 
+                                    : 
+                                    val
+                        }
                     </Typography>
+                </CardContent>      
+                <CardActions>
                     <Button
                         variant="contained" 
                         color="primary"
@@ -214,10 +222,10 @@ const ResultCard = ({val, probability, index}) => {
                     {
                         showProbability &&
                         <Typography variant="subtitle1">
-                            {probability}
+                            {probability.toFixed(2)}
                         </Typography>
                     }
-                </CardContent>      
+                </CardActions>
             </Card>
         </Grid>
     )
